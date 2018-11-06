@@ -1,0 +1,680 @@
+﻿@{
+    ViewBag.Title = "View";
+}
+@model Model.JSPayMasterM
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+    <title>@Model.str_StoreName</title>
+
+    <link rel="stylesheet" href="/Content/amazeui.min.css">
+    <link rel="stylesheet" href="/Content/app.css">
+    <link rel="stylesheet" href="~/Content/public.css">
+    <link href="/Content/bootstrap.min.css" rel="stylesheet">
+    <script src="~/Scripts/layer_mobile/layer.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="/Scripts/Dialog.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="/Content/weui.css" />
+   
+    <script src="~/Scripts/layer/layer.js"></script>
+    <!--[if (gte IE 9)|!(IE)]><!-->
+    <script src="/Scripts/jquery-1.10.2.min.js"></script>
+    <!--<![endif]-->
+    <!--[if lte IE 8 ]>
+    <script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+    <script src="assets/js/amazeui.ie8polyfill.min.js"></script>
+    <![endif]-->
+    <script src="/Scripts/amazeui.min.js"></script>
+</head>
+<body>
+   
+    <div data-am-sticky>
+        <div class="header">
+            <div class="am-u-sm-2 am-vertical-align" style="height:100%;" onclick="back()">
+                <img class="img_back am-vertical-align-middle" src="~/Images/back.png" style="margin-left:5px;" />
+                <text class="am-vertical-align-middle" style="font-size:16px;color:#ffffff;">返回</text>
+            </div>
+            <div class="am-u-sm-8 am-vertical-align" style="height:100%;text-align:center;">
+                <text class="am-vertical-align-middle" style="font-size:16px;color:#ffffff;">订单支付</text>
+            </div>
+            <div class="am-u-sm-2" style="height:100%;">
+            </div>
+        </div>
+    </div>
+    @if (!string.IsNullOrEmpty(Model.message))
+    {
+        <script type="text/javascript">
+            Dialog("温馨提醒", '@Model.message', 1);
+        </script>
+    }
+    @Html.HiddenFor(x => x.appId)
+    @Html.HiddenFor(x => x.timestamp)
+    @Html.HiddenFor(x => x.nonceStr)
+    @Html.HiddenFor(x => x.signature)
+    @Html.HiddenFor(x => x.userVersion)
+
+    @Html.HiddenFor(x => x.body)
+    @Html.HiddenFor(x => x.detail)
+    @Html.HiddenFor(x => x.attach)
+    @Html.HiddenFor(x => x.product_id)
+    @Html.HiddenFor(x => x.goods_tag)
+    @Html.HiddenFor(x => x.Ing_StoreID)
+
+    @Html.HiddenFor(x => x.openid)
+    @Html.HiddenFor(x => x.total_fee)
+    @Html.HiddenFor(x => x.Ing_type)
+    @Html.HiddenFor(x => x.Ing_pkid)
+
+    @Html.HiddenFor(x => x.str_paypassword)
+    @Html.HiddenFor(x => x.debug)
+
+    @Html.HiddenFor(x => x.couponMax)
+    <input type="hidden" value="0" id="pkid1" />
+    <input id="doc-prompt-toggle" type="hidden" />
+    <div class="am-modal am-modal-prompt" tabindex="-1" id="my-prompt">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">请输入储值支付密码</div>
+            <div class="am-modal-bd">
+                <input type="password" class="am-modal-prompt-input">
+            </div>
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                <span class="am-modal-btn" data-am-modal-confirm>提交</span>
+            </div>
+        </div>
+    </div>
+    <input id="doc-modal-loading" type="hidden"  data-am-modal="{target: '#my-modal-loading'}"/>
+    <div class="am-modal am-modal-loading am-modal-no-btn" tabindex="-1" id="my-modal-loading">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">正在支付...</div>
+            <div class="am-modal-bd">
+                <span class="am-icon-spinner am-icon-spin"></span>
+            </div>
+        </div>
+    </div>
+    <div class="am-g" style="padding:10px!important;">
+        <div class="am-u-sm-12">
+            <div class="am-u-sm-8 ">
+                <div style="font-weight:bold;font-size:15px;margin-top:5px!important;">@Model.str_StoreName</div>
+                <div style="color:#808080;font-size:12px;margin-top:5px!important;">@Model.str_RoomType</div>
+                @if (Model.isHour)
+                {
+                    <div style="color:#808080;font-size:12px;margin-top:5px!important;">入住<span>@Model.dt_Arr.ToString("MM-dd HH:mm")</span>　离店<span>@Model.dt_Dep.ToString("HH:mm")</span>　</div>
+                }
+                else
+                {
+                    <div style="color:#808080;font-size:12px;margin-top:5px!important;">入住<span>@Model.dt_Arr.ToString("MM-dd")</span>　离店<span>@Model.dt_Dep.ToString("MM-dd")</span>　共<span id="spanday">@Model.day</span>晚</div>
+                }
+            </div>
+            <div class="am-u-sm-4">
+                <div style="float:right;margin-top:20px!important;color:#E1662D;font-size:15px;font-weight:bold;">&yen;<span class="spantotalprice">@Html.DisplayFor(x => x.dec_money)</span></div>
+            </div>
+        </div>
+        <div class="am-u-sm-12 " style="margin-top:5px!important;height:1px;border-top:1px solid #d5d5d5;">
+        </div>
+        <div class="am-u-sm-12 am-vertical-align" style="height:35px;">
+            <text class="am-vertical-align-middle" style="font-size:12px;color:#808080;">结算信息</text>
+        </div>
+        <div class="am-u-sm-12 " style="height:1px;border-top:1px solid #d5d5d5;">
+        </div>
+        <div class="am-u-sm-12">
+            <label class="am-checkbox" style="margin-top:10px;">
+                @if (Model.Ing_IntegralExchangeSta != 0)
+                {
+                    <input type="checkbox" id="IntegralCheck" value="" data-am-ucheck disabled>
+                }
+                else
+                {
+                    <input type="checkbox" id="IntegralCheck" value="" data-am-ucheck onclick="IntegralCheck()">
+                }
+                <span style="font-weight:bold;">积分兑换</span><span style="float:right;font-weight:bold;"><span id="txtintemoney">0</span>元</span>
+                <br />
+                @if (!string.IsNullOrEmpty(Model.str_IntegralMessage))
+                {
+                    <span style="font-size:12px;color:#E1662D;">@Model.str_IntegralMessage</span>
+                }
+                else
+                {
+                    <span style="font-size:12px;color:#E1662D;">你有积分：@Model.Ing_SurplusIntegral,每个房晚需 @Model.Ing_NeedIntegral</span>
+                    @Html.HiddenFor(x => x.dec_IntegralExchangeTotalMoney)
+                    @Html.HiddenFor(x => x.Ing_IntegralExchangeTotal)
+                    @Html.HiddenFor(x => x.Ing_IntegralExchangeNight)
+                    @Html.HiddenFor(x => x.Ing_IntegralExchangeSta)
+                }
+                <span id="pintegralselected" style="display:none;float:right;font-weight:bold;">房晚:@Model.Ing_IntegralExchangeNight<br />消费积分：@Model.Ing_IntegralExchangeTotal</span>
+            </label>
+            <label class="am-checkbox" style="margin-top:20px;">
+                @if (Model.dec_SurplusMoney > 0)
+                {
+                    <input type="checkbox" id="SurplusCheck" value="" data-am-ucheck onclick="SurplusCheck()">
+                }
+                else
+                {
+                    <input type="checkbox" id="SurplusCheck" value="" data-am-ucheck disabled>
+                }
+                <span style="font-weight:bold;">储值金</span>
+                <span style="float:right;font-weight:bold;">
+                    <span id="txtmoney">0</span>元
+                </span>
+                <input type="hidden" id="hidmoney" value="@Math.Min(Model.dec_SurplusMoney, Model.dec_money)" />
+                <br />
+                <span style="font-size:12px;color:#E1662D;"><span id="spanSurplusMoney">@Model.dec_SurplusMoney</span>元</span>
+            </label>
+            <label class="am-checkbox" style="margin-top:20px;">
+                @if (@Model.couponNum > 0)
+                {
+                    <input type="checkbox" id="CouponCheck" value="" data-am-ucheck onclick="CouponCheck()">
+                }
+                else
+                {
+                    <input type="checkbox" id="CouponCheck" value="" data-am-ucheck disabled>
+                }
+                <span style="font-weight:bold;">抵用券</span>
+                <span style="float:right;font-weight:bold;">
+                    <span class="couponamount">0</span>元
+                </span>
+                <br />
+                <span style="font-size:12px;color:#E1662D;">你有<span style="color: black;">@Model.couponNum</span>张可用</span>
+                <input type="hidden" id="coupondetailid" value="0" />
+            </label>
+            <div class="am-u-sm-12 " style="margin-top:5px!important;height:1px;border-top:1px solid #d5d5d5;">
+            </div>
+            <label class="am-checkbox" style="margin-top:30px;">
+                @if (Model.dec_WechatPrice > 0)
+                {
+                    <input type="checkbox" id="WechatPriceCheck" value="" data-am-ucheck onclick="WechatPriceCheck()">
+                }
+                else
+                {
+                    <input type="checkbox" id="WechatPriceCheck" value="" data-am-ucheck disabled>
+                }
+                <span style="font-weight:bold;">微信钱包</span>
+                <span style="float:right;font-weight:bold;">
+                    <span id="txtwxqb">0</span>元
+                </span>
+                <input type="hidden" id="hidwxqb" value="@Math.Min(Model.dec_WechatPrice, Model.dec_money)" />
+                <br />
+                <span style="font-size:12px;color:#E1662D;"><span>@Model.dec_WechatPrice</span>元</span>
+            </label>
+            <div class="am-u-sm-12 " style="margin-top:5px!important;height:1px;border-top:1px solid #d5d5d5;">
+            </div>
+
+        </div>
+        <div class="am-u-sm-12 am-vertical-align" style="height:35px;">
+            <text class="am-vertical-align-middle" style="font-size:12px;color:#808080;">结算信息</text>
+        </div>
+        <div class="am-u-sm-12 " style="height:1px;border-top:1px solid #d5d5d5;">
+        </div>
+        <div class="am-u-sm-12 am-vertical-align" style="height:40px;">
+            <img class="am-vertical-align-middle" style="height:20px;width:20px;" src="~/Images/weixin.jpg" />
+            <text class="am-vertical-align-middle" style="font-size:12px;color:#808080;">微信支付</text>
+        </div>
+        <div class="am-u-sm-12 " style="height:1px;border-top:1px solid #d5d5d5;">
+        </div>
+        <div class="am-u-sm-12" style="margin-top:20px!important;">
+            <span>需支付<span>&yen;<b class="total_price" style="color:#E1662D;font-size:16px;">@Html.DisplayFor(x => x.dec_money)</b></span></span>
+            <button class="am-btn order1button" style="" onclick="wechatpay()">立即支付</button>
+        </div>
+        <input id="chooseWXPay" type="hidden"  onclick="choosepay()"/>
+        
+        
+    </div>
+    
+    <script>
+
+
+        var loadindex = 0;
+        ///支付信息的选中信息显示的状态
+        ///type  0: 积分兑换    1：储值支付   2：优惠券  3:微信钱包
+        function displayselsta(type) {
+            if (type == 0) {//积分兑换
+                //$("#txtintemoney").html("0");
+                $(".couponamount").html("0");
+                $("#txtmoney").html("0");
+                $("#txtwxqb").html("0");
+                $("#IntegralCheck").uCheck('check');
+                $("#SurplusCheck").uCheck('uncheck');
+                $("#CouponCheck").uCheck('uncheck');
+                $("#WechatPriceCheck").uCheck('uncheck');
+            }
+            else if (type == 1) {//储值支付
+                $("#txtintemoney").html("0");
+                $(".couponamount").html("0");
+                //$("#txtmoney").html("0");
+                $("#txtwxqb").html("0");
+                $("#IntegralCheck").uCheck('uncheck');
+                $("#SurplusCheck").uCheck('check');
+                $("#CouponCheck").uCheck('uncheck');
+                $("#WechatPriceCheck").uCheck('uncheck');
+            }
+            else if (type == 2) {//优惠券
+                $("#txtintemoney").html("0");
+                //$(".couponamount").html("0");
+                $("#txtmoney").html("0");
+                $("#txtwxqb").html("0");
+                $("#IntegralCheck").uCheck('uncheck');
+                $("#SurplusCheck").uCheck('uncheck');
+                $("#CouponCheck").uCheck('check');
+                $("#WechatPriceCheck").uCheck('uncheck');
+            }
+            else if (type == 3) {//微信钱包
+                $("#txtintemoney").html("0");
+                $(".couponamount").html("0");
+                $("#txtmoney").html("0");
+                //$("#txtwxqb").html("0");
+                $("#IntegralCheck").uCheck('uncheck');
+                $("#SurplusCheck").uCheck('uncheck');
+                $("#CouponCheck").uCheck('uncheck');
+                $("#WechatPriceCheck").uCheck('check');
+            } else {
+                $("#txtintemoney").html("0");
+                $(".couponamount").html("0");
+                $("#txtmoney").html("0");
+                $("#txtwxqb").html("0");
+                $("#IntegralCheck").uCheck('uncheck');
+                $("#SurplusCheck").uCheck('uncheck');
+                $("#CouponCheck").uCheck('uncheck');
+                $("#WechatPriceCheck").uCheck('uncheck');
+                getprice();
+            }
+            return;
+        }
+        function IntegralCheck() {
+            if ($("#IntegralCheck").is(':checked')) {
+                var money = parseFloat($("#dec_IntegralExchangeTotalMoney").val());
+                if (isNaN(money)) money = 0;
+                if (money < 0) money = 0;
+                $("#txtintemoney").html(money);
+                displayselsta(0);
+                getprice();
+            } else {
+                displayselsta(-1);
+            }
+        }
+        function SurplusCheck() {
+
+            if ($("#SurplusCheck").is(':checked')) {
+                var money = parseFloat($("#hidmoney").val());  ///储值金额
+                if (isNaN(money)) money = 0;
+                if (money < 0) money = 0;
+                if (money == 0) {
+                    return;
+                }
+                $("#txtmoney").html(money);
+                displayselsta(1);
+                getprice();
+            } else {
+                displayselsta(-1);
+            }
+        }
+        function CouponCheck() {
+            if ($("#CouponCheck").is(':checked')) {
+                displayselsta(2);
+            } else {
+                displayselsta(-1);
+            }
+        }
+        function WechatPriceCheck() {
+            if ($("#WechatPriceCheck").is(':checked')) {
+                var money = parseFloat($("#hidwxqb").val());  ///储值金额
+                if (isNaN(money)) money = 0;
+                if (money < 0) money = 0;
+                if (money == 0) {
+                    return;
+                }
+                $("#txtwxqb").html(money);
+                displayselsta(3);
+                getprice();
+            } else {
+                displayselsta(-1);
+            }
+        }
+        function getprice() {
+            var totalprice = parseFloat($(".spantotalprice").html());  ///总价
+            var couponprice = parseFloat($(".couponamount").html());  ///优惠券价格
+            var leftprice = totalprice - couponprice;
+            if (leftprice < 0) {
+                $("#txtmoney").val("0");
+                leftprice = 0;
+            }
+
+            var money = parseFloat($("#txtmoney").html());  ///储值金额
+            if (money > leftprice) {
+                $("#txtmoney").html(leftprice);
+            }
+            leftprice = leftprice - money;
+            if (leftprice < 0) {
+                leftprice = 0;
+            }
+            var wechatPrice = parseFloat($("#txtwxqb").html());//微信钱包
+            //console.log(wechatPrice);
+            if (wechatPrice > leftprice) {
+                $("#txtwxqb").html(leftprice);
+            }
+            leftprice = leftprice - wechatPrice;
+            if (leftprice < 0) {
+                leftprice = 0;
+            }
+
+            money = parseFloat($("#txtintemoney").html());  ///积分兑换
+            if (money > leftprice) {
+                $("#txtintemoney").html(leftprice);
+            }
+            leftprice = leftprice - money;
+            if (leftprice < 0) {
+                leftprice = 0;
+            }
+
+            $(".total_price").html(leftprice.toFixed(2));
+
+            var totalfee = leftprice * 100;
+            $("#total_fee").val(totalfee.toFixed(0));
+        }
+        function wechatpay() {
+
+            //loadindex = layer.open({
+            //    type: 2
+            //   , content: '加载中'
+            //});
+            var money = parseFloat($("#txtmoney").html());  ///储值金额
+            if (money < 0) {
+                money = 0;
+            }
+
+            //因为储值支付需要验证密码的
+            if (money > 0) {
+                $("#doc-prompt-toggle").click();
+            }
+            else {
+                // layer.close(loadindex);
+                pay1()
+            }
+
+        }
+        $(function () {
+            $('#doc-prompt-toggle').on('click', function () {
+                $('#my-prompt').modal({
+                    relatedTarget: this,
+                    onConfirm: function (e) {
+                        var pwd = e.data;
+                        console.log(pwd);
+                        var storeid = '@Model.Ing_StoreID';
+                        if (pwd == "") {
+                            alert("储值支付密码不能为空");
+                            return;
+                        }
+                        var formParam = { pwd: pwd, vipcardid: '@Model.Ing_Pk_VipCardId' };
+                        $.ajax({
+                            type: 'post',
+                            url: '/MyAccount/VirifyPwd',// 跳转到 action
+                            data: formParam,
+                            cache: false,
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.data) {
+                                    alert("储值支付密码正确");
+                                    pay1();
+                                } else {
+                                    alert("储值支付密码错误");
+                                    return;
+                                }
+                            },
+                            error: function () {
+                                alert("系统故障");
+                                layer.close(loadindex);
+                                return;
+                            }
+                        });
+                    },
+                    onCancel: function (e) {
+                       
+                    }
+                });
+            });
+        });
+        function removeLoading() {
+            var ui =document.getElementById("my-modal-loading");
+            ui.style.display="none";
+        }
+        function pay1() {
+            //if (loadindex == 0) {
+            //    loadindex = layer.open({
+            //        type: 2
+            //    ,content: '支付中'
+            //    });
+            //}
+            //$("#doc-modal-loading").click();
+            var money = parseFloat($("#txtmoney").html());  ///储值金额
+            if (money < 0) {
+                money = 0;
+            }
+            $("#hidmoney").val(money);
+            var wechatPrice = parseFloat($("#txtwxqb").html());//微信钱包
+            if (wechatPrice < 0) {
+                wechatPrice = 0;
+            }
+            $("#hidwxqb").val(wechatPrice);
+            var totalfee = parseInt($("#total_fee").val(), 10);
+            if (totalfee == 0) {
+                //如果要付的金额为0了,就说明是储值/钱包/优惠券/积分支付
+                pay();
+                return;
+            }
+            if ($("#debug").val() == "1") {
+                $("#total_fee").val("1");
+            }
+            choosepay();
+            //$("#wechatpay").css("display", "block");
+        }
+        ///优惠券储值金额支付等等
+        function pay() {
+            var coupondetailid = $("#coupondetailid").val();
+
+            var money = parseFloat($("#txtmoney").html());  ///储值金额
+            if (money < 0) money = 0;
+
+            var wechatPrice = parseFloat($("#txtwxqb").html());//微信钱包
+            if (wechatPrice < 0) wechatPrice = 0;
+
+
+            var dec_IntegralExchangeTotalMoney = parseFloat($("#txtintemoney").html());
+            var Ing_IntegralExchangeTotal = parseInt($("#Ing_IntegralExchangeTotal").val(), 10);
+            if (dec_IntegralExchangeTotalMoney == 0) {
+                Ing_IntegralExchangeTotal = 0;
+            }
+
+
+            var formParam = {
+                Ing_StoreID: '@Model.Ing_StoreID', MasterID: '@Model.Ing_pkid', PagerIDs: coupondetailid
+                  , openid: '@Model.openid', dec_SurplusMoney: money, Ing_Pk_VipCardId: '@Model.Ing_Pk_VipCardId'
+                  , dec_IntegralExchangeTotalMoney: dec_IntegralExchangeTotalMoney, Ing_IntegralExchangeTotal: Ing_IntegralExchangeTotal,
+                dec_WechatPrice: wechatPrice
+            };//序列化表格内容为字符串
+
+            $.ajax({
+                type: 'post',
+                url: '/MyAccount/WXPay',
+                data: formParam,
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.success == true) {
+                        Dialog("温馨提醒", "支付成功", 1, "payok");
+                    } else {
+                        Dialog("温馨提醒", data.message, 1);
+                    }
+                },
+                error: function () {
+                    Dialog("温馨提醒", "系统异常", 1);
+                }
+            });
+        }
+        function back() {
+            location.href = '@ViewBag.rawurl';
+        }
+        function payok() {
+            location.href = '@ViewBag.rawurl';
+        }
+        /// <reference path="layer_mobile/layer.js" />
+        /// <reference path="layer_mobile/layer.js" />
+        wx.config({
+            debug: false,// 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: $("#appId").val(),// 必填，公众号的唯一标识
+            timestamp: $("#timestamp").val(),// 必填，生成签名的时间戳
+            nonceStr: $("#nonceStr").val(),// 必填，生成签名的随机串
+            signature: $("#signature").val(),// 必填，签名，
+            jsApiList: [
+            'checkJsApi',
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage',
+            'onMenuShareQQ',
+            'onMenuShareWeibo',
+            'hideMenuItems',
+            'showMenuItems',
+            'hideAllNonBaseMenuItem',
+            'showAllNonBaseMenuItem',
+            'translateVoice',
+            'startRecord',
+            'stopRecord',
+            'onRecordEnd',
+            'playVoice',
+            'pauseVoice',
+            'stopVoice',
+            'uploadVoice',
+            'downloadVoice',
+            'chooseImage',
+            'previewImage',
+            'uploadImage',
+            'downloadImage',
+            'getNetworkType',
+            'openLocation',
+            'getLocation',
+            'hideOptionMenu',
+            'showOptionMenu',
+            'closeWindow',
+            'scanQRCode',
+            'chooseWXPay',
+            'openProductSpecificView',
+            'addCard',
+            'chooseCard',
+            'openCard'
+            ]
+        });
+
+
+
+        // 10.1 发起一个支付请求
+        function choosepay() {
+            var version = parseInt($("#userVersion").val());
+            if (version < 0)
+            {
+                alert("抱歉，必须使用微信客户端打开才能使用微信支付。");
+                return;
+            }
+            if (version < 5) {
+                alert("抱歉，您的微信版本不支持微信支付。");
+                return;
+            }
+
+            // 注意：此 Demo 使用 2.7 版本支付接口实现，建议使用此接口时参考微信支付相关最新文档。
+            var body = $("#body").val();
+            var detail = $("#detail").val();
+            var attach = $("#attach").val();
+            var product_id = $("#product_id").val();
+            var goods_tag = $("#goods_tag").val();
+            var openid = $("#openid").val();
+            var storeid = $("#Ing_StoreID").val();
+            $.ajax({
+                url: '/wxpay/',
+                type: 'POST',
+                timeOut: 60000,
+                data: {
+                    body: body,
+                    detail: detail,
+                    attach: attach,
+                    total_fee: $("#total_fee").val(),//订单总金额，只能为整数
+                    trade_type: 'JSAPI',
+                    goods_tag: '',//商品标记，代金券或立减优惠功能的参数
+                    product_id: product_id,//trade_type=NATIVE，此参数必传。此id为二维码中包含的商品ID，商户自行定义。
+                    openid: openid,
+                    storeid: storeid,
+                    timeStamp: $("#timestamp").val(),
+                    Ing_type: $("#Ing_type").val(),
+                    Ing_pkid: $("#Ing_pkid").val(),
+                    Ing_pkid1: $("#pkid1").val(),
+                    dec_ChargeMon: $("#hidmoney").val(),
+                    dec_Wechat: $("#hidwxqb").val(),
+                    coupondetailid: $("#coupondetailid").val(),
+                    nonceStr: $("#nonceStr").val()
+                },
+                success: function (res) {
+                    //removeLoading();
+                    if (res.return_code == "SUCCESS") {
+
+                        var prepay_id = res.prepay_id;
+                        var paySign = res.paysign;
+                       
+                        wx.chooseWXPay({
+                            appId: $("#appId").val(),// 必填，公众号的唯一标识
+                            timestamp: $("#timestamp").val(),
+                            nonceStr: $("#nonceStr").val(),
+                            package: 'prepay_id=' + prepay_id,
+                            signType: 'MD5',
+                            paySign: paySign,
+                            success: function (res1) {
+                                // 支付成功后的回调函数，详细请参见：http://pay.weixin.qq.com/wiki/doc/api/index.php?chapter=7_7
+                                if (res1.errMsg == "chooseWXPay:ok") { // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
+                                    //TODO：此处为安全期间，应调用商户api查询订单状态。
+                                    if ($("#Ing_type").val() == "0")//预定支付
+                                    {
+                                        
+                                        pay();
+
+                                    }
+                                    else if ($("#Ing_type").val() == "1")//会员储值
+                                    {
+
+                                        if ($("#total_fee").val() == "50000") {
+
+                                            Dialog("温馨提醒", "充值成功", 1, "gotoChargeShare");
+                                        }
+                                        else {
+
+                                            Dialog("温馨提醒", "充值成功", 1, "gotoshare");
+
+                                        }
+
+                                    }
+                                }
+                                else {
+                                    //TODO：支付过程中用户取消的商户处理逻辑。
+                                    alert(res1.errMsg);
+                                }
+                            },
+                            cancel: function (res1) {
+                                alert("支付过程中用户取消");
+                            },
+                            fail: function (res1) {
+                                alert("支付失败:" + res1);
+                            }
+                        });
+                    }
+                    else {
+                        alert(res.return_msg);
+                    }
+                },
+                fail: function (res) {
+                    alert(res.responseText);
+                }
+            });
+
+        };
+    </script>
+</body>
+</html>

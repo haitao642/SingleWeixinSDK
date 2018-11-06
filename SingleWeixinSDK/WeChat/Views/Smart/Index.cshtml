@@ -1,0 +1,244 @@
+﻿@model Model.SmartControl.SmartM
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+    <script src="/scripts/jquery-1.10.2.js"></script>
+    <link href="~/Content/smart.css" rel="stylesheet">
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <title>智能遥控</title>
+</head>
+<body>
+    @if (Model.isOnline)
+    {
+
+        <div style="position:relative">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-12 col-sm-12" style="padding:0!important;">
+                        <div class="header_pro">
+                            <text style="font-size:26px;color:#ffffff;">智能遥控</text>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-12 col-sm-12" style="position:relative;padding:0!important;">
+                        <div class="show_image">
+
+                        </div>
+                        <div class="show_info">
+                            <div style="margin:4px 0 0 4px;">
+                                <text style="font-size:15px;color:#FFFE15;">@Model.storename 房间:@Model.roomNo</text>
+                            </div>
+                            <div class="temp_info">
+                                <text style="font-size:50px;color:#ffffff;">--°C</text>
+                            </div>
+                            <div style="float:left;width:100%;">
+                                <ul class="number_info">
+                                    <li>
+                                        <img src="~/Images/smart/wd.png" />
+                                        <div>温度</div>
+                                    </li>
+                                    <li>
+                                        <img src="~/Images/smart/tq.png" />
+                                        <div>天气</div>
+                                    </li>
+                                    <li>
+                                        <img src="~/Images/smart/fl.png" />
+                                        <div>风力</div>
+                                    </li>
+                                    <li>
+                                        <img src="~/Images/smart/PM2.5.png" />
+                                        <div>PM2.5</div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+
+                <div class="row">
+                    @if (Model.info.Count > 0)
+                    {
+                        foreach (var item in Model.info)
+                        {
+                            if (item.deviceid == 1)//1:电视,0:空调,-3:机顶盒-1：窗帘,-2:音响
+                            {
+                                <div class="col-xs-3 col-lg-3 col-sm-3" style="text-align:center;padding:0!important;" onclick="go_chtv('@item.gatewayid','@item.controllerid','@Model.ing_storeID','@item.nickname')">
+                                    <div class="div_img">
+                                        <img style="width:63px;height:63px;" src="~/Images/smart/ds.png" />
+                                    </div>
+                                    <div class="div_text">
+                                        <p class="h6">@item.nickname</p>
+                                    </div>
+                                </div>
+                            }
+                            else if (item.deviceid == 0)
+                            {
+                                <div class="col-xs-3 col-lg-3 col-sm-3" style="text-align:center;padding:0!important;" onclick="go_klair('@item.gatewayid','@item.controllerid','@Model.ing_storeID','@item.nickname')">
+                                    <div class="div_img">
+                                        <img style="width:63px;height:63px;" src="~/Images/smart/kt.png" />
+                                    </div>
+                                    <div class="div_text">
+                                        <p class="h6">@item.nickname</p>
+                                    </div>
+                                </div>
+                            }
+                            else if (item.deviceid == -3)
+                            {
+                                <div class="col-xs-3 col-lg-3 col-sm-3" style="text-align:center;padding:0!important;" onclick="go_bestv('@item.gatewayid','@item.controllerid','@Model.ing_storeID','@item.nickname')">
+                                    <div class="div_img">
+                                        <img style="width:63px;height:63px;" src="~/Images/smart/jdh.png" />
+                                    </div>
+                                    <div class="div_text">
+                                        <p class="h6">@item.nickname</p>
+                                    </div>
+                                </div>
+                            }
+                            else if (item.deviceid == -1)
+                            {
+                                <div class="col-xs-3 col-lg-3 col-sm-3" style="text-align:center;padding:0!important;" onclick="go_curtain('@item.gatewayid','@item.controllerid','@Model.ing_storeID','@item.nickname')">
+                                    <div class="div_img">
+                                        <img style="width:63px;height:63px;" src="~/Images/smart/cl.png" />
+                                    </div>
+                                    <div class="div_text">
+                                        <p class="h6">@item.nickname</p>
+                                    </div>
+                                </div>
+                            }
+                            else if (item.deviceid == -2)
+                            {
+                                <div class="col-xs-3 col-lg-3 col-sm-3" style="text-align:center;padding:0!important;" onclick="go_sound('@item.gatewayid','@item.controllerid','@Model.ing_storeID','@item.nickname')">
+                                    <div class="div_img">
+                                        <img style="width:63px;height:63px;" src="~/Images/smart/yx.png" />
+                                    </div>
+                                    <div class="div_text">
+                                        <p class="h6">@item.nickname</p>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+
+                            }
+                        }
+                    }
+                    @if (Model.info.Count <= 0)
+                    {
+                        <div style="text-align:center;margin-top:20px;">
+                            <text class="h3">当前房间没有设备信息!</text>
+
+                        </div>
+                    }
+
+                    @*<div class="col-xs-3 col-lg-3 col-sm-3" style="text-align:center;">
+                        <div class="div_img">
+                        <img src="~/Images/smart/hj.png" />
+                        </div>
+                        <div class="div_text">
+                        <p>呼叫</p>
+                        </div>
+                        </div>*@
+
+
+                </div>
+            </div>
+            @*@if (Model.Ing_SHActivity == 0 && Model.Ing_SHActivity0 == 1 && Model.Ing_SHShow == 1)
+            {
+                <div class="shactivity" id="shactivity" style="text-align:center;position:absolute;padding:0!important;width:100%;
+animation-name:shactivity;
+animation-duration:1s;
+animation-timing-function:ease;
+animation-delay:0s;
+animation-direction:alternate;
+animation-play-state:running;
+animation-fill-mode:forwards;
+-moz-animation-name:shactivity;
+-moz-animation-duration:1s;
+-moz-animation-timing-function:ease;
+-moz-animation-delay:0s;
+-moz-animation-direction:alternate;
+-moz-animation-play-state:running;
+-moz-animation-fill-mode:forwards;
+-webkit-animation-name:shactivity;
+-webkit-animation-duration:1s;
+-webkit-animation-timing-function:ease;
+-webkit-animation-delay:0s;
+-webkit-animation-direction:alternate;
+-webkit-animation-play-state:running;
+-webkit-animation-fill-mode:forwards;
+-o-animation-name:shactivity;
+-o-animation-duration:1s;
+-o-animation-timing-function:ease;
+-o-animation-delay:0s;
+-o-animation-direction:alternate;
+-o-animation-play-state:running;
+-o-animation-fill-mode:forwards;">
+                    <div class="col-xs-1 col-lg-1 col-sm-1" style="background:rgba(0,0,0,0);padding:0!important;height:410px;display:block;"></div>
+                    <div class="col-xs-10 col-lg-10 col-sm-10 div_center" style="text-align:center;background:rgba(0,0,0,0.3);padding:0!important;">
+                        <img src="~/Images/smart/closewindow.png" style="width:30px;height:30px;float:right" ontouchend="close_window()" />
+                        <img src="~/Images/smart/activity.png" style="width:250px;height:370px;margin-bottom:10px;margin-top:30px;margin-left:15px;" />
+                    </div>
+                    <div class="col-xs-1 col-lg-1 col-sm-1" style="background:rgba(0,0,0,0);padding:0!important;height:410px;display:none;"></div>
+                </div>
+            }*@
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="row">
+                <div style="text-align:center;margin-top:20px;">
+                    @*<text class="h3">当前用户没有在住信息!</text>*@
+                    <img src="~/Images/smart/none.png" style="width:200px;height:150px;" />
+                </div>
+            </div>
+        </div>
+    }
+    <script type="text/javascript">
+        //跳转
+        function go_chtv(gatewayid, controllerid, storeid, nickname) {
+            var url = "/Smart/CHTv?gatewayid=" + gatewayid + "&controllerid=" + controllerid + "&storeid=" + storeid + "&nickname=" + nickname +
+                "&openid=" + '@Model.openid' + "&custid=" + '@Model.custid' + "&custName=" + '@Model.custName' + "&roomNo=" + '@Model.roomNo' + "&masterid=" + '@Model.masterid';
+            window.location.href = url;
+        }
+        function go_klair(gatewayid, controllerid, storeid, nickname) {
+            var url = "/Smart/KLAir?gatewayid=" + gatewayid + "&controllerid=" + controllerid + "&storeid=" + storeid + "&nickname=" + nickname +
+                "&openid=" + '@Model.openid' + "&custid=" + '@Model.custid' + "&custName=" + '@Model.custName' + "&roomNo=" + '@Model.roomNo' + "&masterid=" + '@Model.masterid';
+            window.location.href = url;
+        }
+        function go_bestv(gatewayid, controllerid, storeid, nickname) {
+            var url = "/Smart/BesTv?gatewayid=" + gatewayid + "&controllerid=" + controllerid + "&storeid=" + storeid + "&nickname=" + nickname +
+                "&openid=" + '@Model.openid' + "&custid=" + '@Model.custid' + "&custName=" + '@Model.custName' + "&roomNo=" + '@Model.roomNo' + "&masterid=" + '@Model.masterid';
+            window.location.href = url;
+        }
+        function go_curtain(gatewayid, controllerid, storeid, nickname) {
+            var url = "/Smart/Curtain?gatewayid=" + gatewayid + "&controllerid=" + controllerid + "&storeid=" + storeid + "&nickname=" + nickname +
+                "&openid=" + '@Model.openid' + "&custid=" + '@Model.custid' + "&custName=" + '@Model.custName' + "&roomNo=" + '@Model.roomNo' + "&masterid=" + '@Model.masterid';
+            window.location.href = url;
+        }
+        function go_sound(gatewayid, controllerid, storeid, nickname) {
+            var url = "/Smart/Sound?gatewayid=" + gatewayid + "&controllerid=" + controllerid + "&storeid=" + storeid + "&nickname=" + nickname +
+                "&openid=" + '@Model.openid' + "&custid=" + '@Model.custid' + "&custName=" + '@Model.custName' + "&roomNo=" + '@Model.roomNo' + "&masterid=" + '@Model.masterid';
+            window.location.href = url;
+        }
+        function close_window() {
+            @*@Model.Ing_SHShow=0;*@
+            var target = document.getElementById("shactivity");
+            target.style.display = "none";
+        }
+    </script>
+</body>
+</html>

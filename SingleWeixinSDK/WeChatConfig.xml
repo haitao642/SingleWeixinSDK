@@ -1,0 +1,31 @@
+<WeiXinConfig>
+<StoreList>
+<Store>
+<ID>7</ID>
+<Name>泊捷酒店华都店</Name>
+<!--微信Token-->
+<Token>i787f58P6Gla44EV51JfvzgG5d445E6</Token>
+<!--微信消息体加密对应的EncodingAESKey-->
+<EncodingAESKey>EPtyFwqgACaVlMthN8CFO7o2ShEOlsp1A6XZEyGfFAk</EncodingAESKey>
+    <!--微信AppId-->
+<AppID>wxf7bd3c3f942fcfee</AppID>
+<!--微信AppSecret-->
+<AppSecret>f1a2c5742a9b705ca7b2683784cc56e9</AppSecret>
+<!--用于微信支付的PartnerKey-->
+<PartnerKey>F6EF67A613924A1590AB5E9618CAC225</PartnerKey>
+<!--用于微信支付的商户号-->
+<mch_id>1315231901</mch_id>
+<!--用于微信支付的设备号-->
+<device_info></device_info>
+<!--用于微信支付的服务端IP地址-->
+<spbill_create_ip></spbill_create_ip>
+<!--微信Oauth: 
+     snsapi_base:      不弹出授权页面，直接跳转，只能获取用户openid;
+     snsapi_userinfo:  出授权页面，可通过openid拿到昵称、性别、所在地。并且，即使在未关注的情况下，只要用户授权，也能获取其信息.-->
+<OauthScope>snsapi_userinfo</OauthScope>
+<!--是否开启微信JS接口，1：开启，0：不开启（由于开启JS功能需要定时获取jstickect,会消耗一部分性能，所以不需要JS接口的请写0）-->
+<OpenJSSDK>1</OpenJSSDK>
+</Store>
+<Store></Store>
+</StoreList>
+</WeiXinConfig>

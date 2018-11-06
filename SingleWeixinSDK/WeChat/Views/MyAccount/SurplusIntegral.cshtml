@@ -1,0 +1,96 @@
+﻿@{
+    ViewBag.Title = "View";
+}
+@model Model.ChargeIntegralResultM
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+    <title>@Model.Str_StoreName</title>
+
+    <link rel="stylesheet" href="/Content/amazeui.min.css">
+    <link rel="stylesheet" href="/Content/app.css">
+    <link rel="stylesheet" href="~/Content/public.css">
+    <link href="/Content/bootstrap.min.css" rel="stylesheet">
+    <!--[if (gte IE 9)|!(IE)]><!-->
+    <script src="/Scripts/jquery-1.10.2.min.js"></script>
+    <!--<![endif]-->
+    <!--[if lte IE 8 ]>
+    <script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+    <script src="assets/js/amazeui.ie8polyfill.min.js"></script>
+    <![endif]-->
+    <script src="/Scripts/amazeui.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+</head>
+<body>
+    <div data-am-sticky>
+        <div class="header">
+            <div class="am-u-sm-2 am-vertical-align" style="height:100%;text-align:center;" onclick="back()">
+                <img class="img_back am-vertical-align-middle" src="~/Images/back.png" />
+                <text class="am-vertical-align-middle" style="font-size:16px;color:#ffffff;">返回</text>
+            </div>
+            <div class="am-u-sm-8 am-vertical-align" style="height:100%;text-align:center;">
+                <text class="am-vertical-align-middle" style="font-size:16px;color:#ffffff;">我的积分</text>
+            </div>
+            <div class="am-u-sm-2" style="height:100%;">
+            </div>
+        </div>
+    </div>
+    <div class="am-g" style="padding:10px!important;">
+        <div class="am-u-sm-12 am-vertical-align" style="height:70px;">
+            <span class="am-vertical-align-middle" style="font-size:18px;font-weight:bold;">
+                当前可用积分:
+                <span style="color:#E1662D;">@Model.cardM.Ing_SurplusIntegral</span>
+                <br />
+                <span style="font-size:14px;color:#A9A9A9;"> 积分永不过期，适用全部品牌</span>
+            </span>
+
+        </div>
+        <div class="am-u-sm-12 " style="height:1px;border-top:1px solid #d5d5d5;">
+        </div>
+        <div class="am-u-sm-12 am-vertical-align" style="height:40px;">
+            <span class="am-vertical-align-middle" style="font-size:14px;color:#A9A9A9;">积分明细</span>
+        </div>
+        <div class="am-u-sm-12 " style="height:1px;border-top:1px solid #d5d5d5;">
+        </div>
+        @foreach (Model.VipCardChargeIntegralM m in Model.list)
+        {
+            <div class="am-u-sm-12">
+                <div class="am-u-sm-8" style="margin-top:10px!important;">
+                    <div style="font-weight:bold;font-size:14px;">@m.str_remark</div>
+                    <div style="font-size:14px;margin-top:5px!important;">@m.dt_ChargeDate.Value.ToString("yyyy-MM-dd")</div>
+                </div>
+                <div class="am-u-sm-4" style="margin-top:10px!important;">
+                    <div style="float:right;">
+                        @if (m.Ing_CreditIntegral > 0)
+                        {
+                            <span style="color:#E1662D;">+@m.Ing_CreditIntegral</span>
+                        }
+                        else if (m.Ing_ChargeIntegral > 0)
+                        {
+                            <span style="color:blue;">-@m.Ing_ChargeIntegral</span>
+                        }
+                        else
+                        {
+                            <span style="color:black;">0</span>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="am-u-sm-12 " style="height:1px;border-top:1px solid #d5d5d5;margin-top:10px!important;">
+            </div>
+        }
+    </div>
+    <script>
+        function back() {
+            var rawurl = '@Model.rawurl';
+            location.href = rawurl;
+        }
+    </script>
+</body>
+</html>

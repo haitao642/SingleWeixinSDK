@@ -1,0 +1,390 @@
+﻿@{
+    Layout = null;
+}
+@using Model.SmartControl
+@model Model.SmartControl.ControlViewM
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+    <script src="/scripts/jquery-1.10.2.js"></script>
+    <link href="~/Content/smart.css" rel="stylesheet">
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/new/style.css" rel="stylesheet">
+    <link href="/Content/new/style1.css" rel="stylesheet">
+    <script src="/Scripts/Dialog.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="/Content/weui.css" />
+    <link rel="stylesheet" href="/Content/jquery.toast.css">
+    <script type="text/javascript" src="~/Scripts/jquery.toast.js"></script>
+    <script src="/scripts/jquery-1.10.2.min.js"></script>
+    <script src="/scripts/bootstrap.min.js"></script>
+
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+
+
+    <link rel="stylesheet" type="text/css" href="/Content/date/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/date/default.css">
+    <link rel="stylesheet" href="/Content/date/daterangepicker.css" />
+    <script src="/Scripts/date/moment.min.js"></script>
+    <script src="/Scripts/date/jquery.daterangepicker.js"></script>
+    <script src="/Scripts/date/seldate.js"></script>
+    <title>智能遥控</title>
+</head>
+<body style="background-color:#F0EFF5;">
+    <div class="container" style="padding:0!important;">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-2 col-lg-2 col-sm-2 col-md-2 back">
+                    <img  class="img_back" src="~/Images/smart/left.png" ontouchend="back_home('@Model.gatewayid', '@Model.contollerid', '@Model.hotelid', '@Model.nickname','@Model.Ing_CustID','@Model.Ing_MasterID','@Model.str_CustName','@Model.str_OpenID','@Model.str_RoomNo')" />
+                </div>
+                <div class="col-xs-8 col-lg-8 col-sm-8 col-md-2 title">
+                    <text style="font-size:22px;color:#ffffff;">@Model.nickname</text>
+                </div>
+                <div class="col-xs-2 col-lg-2 col-sm-2 col-md-2 menu">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="row" style="padding:10px 20px 0 20px;margin:30px 0 0 0!important;">
+                    <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                        @if (Model.response.keylabel7.KeyLabel7.ContainsKey(TvKeyM.num_1.ToString()))
+                        {
+                            <div ontouchstart="botton1_down('@Model.gatewayid','@Model.contollerid','@Model.hotelid','@TvKeyM.num_1')" ontouchend="botton1_up()" id="key_botton1" class="tv_botton_1 div_center div_normalsize">
+                                <text class="tv_number">1</text>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="tv_botton_1_h div_center div_normalsize">
+                                <text class="tv_number">1</text>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                        @if (Model.response.keylabel7.KeyLabel7.ContainsKey(TvKeyM.num_2.ToString()))
+                        {
+                            <div ontouchstart="botton2_down('@Model.gatewayid','@Model.contollerid','@Model.hotelid','@TvKeyM.num_2')" ontouchend="botton2_up()" id="key_botton2" class="tv_botton_1 div_center div_normalsize">
+                                <text class="tv_number">2</text>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="tv_botton_1_h div_center div_normalsize">
+                                <text class="tv_number">2</text>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                        @if (Model.response.keylabel7.KeyLabel7.ContainsKey(TvKeyM.num_3.ToString()))
+                        {
+                            <div ontouchstart="botton3_down('@Model.gatewayid','@Model.contollerid','@Model.hotelid','@TvKeyM.num_3')" ontouchend="botton3_up()" id="key_botton3" class="tv_botton_1 div_center div_normalsize">
+                                <text class="tv_number">3</text>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="tv_botton_1_h div_center div_normalsize">
+                                <text class="tv_number">3</text>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="row" style="padding:5px 20px 0 20px;margin:10px 0 0 0!important;">
+                    <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                        @if (Model.response.keylabel7.KeyLabel7.ContainsKey(TvKeyM.num_4.ToString()))
+                        {
+                            <div ontouchstart="botton4_down('@Model.gatewayid','@Model.contollerid','@Model.hotelid','@TvKeyM.num_4')" ontouchend="botton4_up()" id="key_botton4" class="tv_botton_1 div_center div_normalsize">
+                                <text class="tv_number">4</text>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="tv_botton_1_h div_center div_normalsize">
+                                <text class="tv_number">4</text>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                        @if (Model.response.keylabel7.KeyLabel7.ContainsKey(TvKeyM.num_5.ToString()))
+                        {
+                            <div ontouchstart="botton5_down('@Model.gatewayid','@Model.contollerid','@Model.hotelid','@TvKeyM.num_5')" ontouchend="botton5_up()" id="key_botton5" class="tv_botton_1 div_center div_normalsize">
+                                <text class="tv_number">5</text>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="tv_botton_1_h div_center div_normalsize">
+                                <text class="tv_number">5</text>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                        @if (Model.response.keylabel7.KeyLabel7.ContainsKey(TvKeyM.num_6.ToString()))
+                        {
+                            <div ontouchstart="botton6_down('@Model.gatewayid','@Model.contollerid','@Model.hotelid','@TvKeyM.num_6')" ontouchend="botton6_up()" id="key_botton6" class="tv_botton_1 div_center div_normalsize">
+                                <text class="tv_number">6</text>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="tv_botton_1_h div_center div_normalsize">
+                                <text class="tv_number">6</text>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="row" style="padding:5px 20px 0 20px;margin:20px 0 0 0!important;">
+                    <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                        @if (Model.response.keylabel7.KeyLabel7.ContainsKey(TvKeyM.num_7.ToString()))
+                        {
+                            <div ontouchstart="botton7_down('@Model.gatewayid','@Model.contollerid','@Model.hotelid','@TvKeyM.num_7')" ontouchend="botton7_up()" id="key_botton7" class="tv_botton_1 div_center div_normalsize">
+                                <text class="tv_number">7</text>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="tv_botton_1_h div_center div_normalsize">
+                                <text class="tv_number">7</text>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                        @if (Model.response.keylabel7.KeyLabel7.ContainsKey(TvKeyM.num_8.ToString()))
+                        {
+                            <div ontouchstart="botton8_down('@Model.gatewayid','@Model.contollerid','@Model.hotelid','@TvKeyM.num_8')" ontouchend="botton8_up()" id="key_botton8" class="tv_botton_1 div_center div_normalsize">
+                                <text class="tv_number">8</text>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="tv_botton_1_h div_center div_normalsize">
+                                <text class="tv_number">8</text>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                        @if (Model.response.keylabel7.KeyLabel7.ContainsKey(TvKeyM.num_9.ToString()))
+                        {
+                            <div ontouchstart="botton9_down('@Model.gatewayid','@Model.contollerid','@Model.hotelid','@TvKeyM.num_9')" ontouchend="botton9_up()" id="key_botton9" class="tv_botton_1 div_center div_normalsize">
+                                <text class="tv_number">9</text>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="tv_botton_1_h div_center div_normalsize">
+                                <text class="tv_number">9</text>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="row" style="padding:5px 20px 0 20px;margin:20px 0 0 0!important;">
+                    <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                        @if (Model.response.keylabel7.KeyLabel7.ContainsKey(TvKeyM.TSWITCH.ToString()))
+                        {
+                            <div ontouchstart="botton10_down('@Model.gatewayid','@Model.contollerid','@Model.hotelid','@TvKeyM.TSWITCH')" ontouchend="botton10_up()" id="key_botton10" class="tv_botton_1 div_center div_normalsize" style="position:relative;">
+                                <text class="tv_number_2">-/--</text>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="tv_botton_1_h div_center div_normalsize" style="position:relative;">
+                                <text class="tv_number_2">-/--</text>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                        @if (Model.response.keylabel7.KeyLabel7.ContainsKey(TvKeyM.num_0.ToString()))
+                        {
+                            <div ontouchstart="botton11_down('@Model.gatewayid','@Model.contollerid','@Model.hotelid','@TvKeyM.num_0')" ontouchend="botton11_up()" id="key_botton11" class="tv_botton_1 div_center div_normalsize">
+                                <text class="tv_number">0</text>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="tv_botton_1_h div_center div_normalsize">
+                                <text class="tv_number">0</text>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                        @if (Model.response.keylabel7.KeyLabel7.ContainsKey(TvKeyM.OK.ToString()))
+                        {
+                            <div ontouchstart="botton12_down('@Model.gatewayid','@Model.contollerid','@Model.hotelid','@TvKeyM.OK')" ontouchend="botton12_up()" id="key_botton12" class="tv_botton_1 div_center div_normalsize">
+                                <text class="tv_number_2">确认</text>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="tv_botton_1_h div_center div_normalsize">
+                                <text class="tv_number_2">确认</text>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        //自定义弹框
+        function Toast(msg, duration) {
+            duration = isNaN(duration) ? 3000 : duration;
+            var m = document.createElement('div');
+            m.innerHTML = msg;
+            m.style.cssText = "width: 50%;min-width: 100px;opacity: 0.7;height: 30px;color: rgb(255, 255, 255);line-height: 30px;text-align: center;border-radius: 5px;position: fixed;top: 90%;left: 25%;z-index: 999999;background: rgb(30, 30, 30);font-size: 12px;";
+            document.body.appendChild(m);
+            setTimeout(function () {
+                var d = 0.5;
+                m.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in';
+                m.style.opacity = '0';
+                setTimeout(function () { document.body.removeChild(m) }, d * 1000);
+            }, duration);
+        }
+        function controlDevice(gatewayid, contollerid, hotelid, keyid, param) {
+            var formParam = {
+                gatewayid: gatewayid, hotelid: hotelid, contollerid: contollerid,
+                type: 0, keyid: keyid, param: param,nickname: '@Model.nickname', str_RoomNo: '@Model.str_RoomNo',
+            Ing_CustID: '@Model.Ing_CustID', str_CustName: '@Model.str_CustName', str_OpenID: '@Model.str_OpenID', Ing_MasterID: '@Model.Ing_MasterID'
+            };
+            console.log(formParam);
+            $.ajax({
+                type: 'post',
+                url: '/Smart/ControlDevice',// 跳转到 action
+                data: formParam,
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    if (data.result == "2003") {
+
+                    } else {
+                        //Dialog("", data.msg, 1, "");
+                        Toast(data.msg, 3000);
+                    }
+                },
+                error: function () {
+                    //Dialog("", "异常！", 1, "");
+                    Toast("异常！", 3000);
+                }
+            });
+        }
+        function back_home(gatewayid, controllerid, storeid, nickname, custid, masterid,custname, openid, roomno) {
+            var url = "/Smart/CHTv?gatewayid=" + gatewayid + "&controllerid=" + controllerid + "&storeid=" + storeid + "&nickname=" + nickname+
+                "&openid=" + openid + "&custid=" + custid + "&custName=" + custname + "&roomNo=" + roomno + "&masterid="+masterid;
+            window.location.href = url;
+        }
+        function botton1_down(gatewayid, contollerid, hotelid, keyid) {
+            var d = document.getElementById("key_botton1");
+            d.style.backgroundImage = "url(../../Images/jdh/button-c.png)";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function botton1_up() {
+            var d = document.getElementById("key_botton1");
+            d.style.backgroundImage = "url(../../Images/jdh/button.png)";
+        }
+        function botton2_down(gatewayid, contollerid, hotelid, keyid) {
+            var d = document.getElementById("key_botton2");
+            d.style.backgroundImage = "url(../../Images/jdh/button-c.png)";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function botton2_up() {
+            var d = document.getElementById("key_botton2");
+            d.style.backgroundImage = "url(../../Images/jdh/button.png)";
+        }
+        function botton3_down(gatewayid, contollerid, hotelid, keyid) {
+            var d = document.getElementById("key_botton3");
+            d.style.backgroundImage = "url(../../Images/jdh/button-c.png)";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function botton3_up() {
+            var d = document.getElementById("key_botton3");
+            d.style.backgroundImage = "url(../../Images/jdh/button.png)";
+        }
+        function botton4_down(gatewayid, contollerid, hotelid, keyid) {
+            var d = document.getElementById("key_botton4");
+            d.style.backgroundImage = "url(../../Images/jdh/button-c.png)";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function botton4_up() {
+            var d = document.getElementById("key_botton4");
+            d.style.backgroundImage = "url(../../Images/jdh/button.png)";
+        }
+        function botton5_down(gatewayid, contollerid, hotelid, keyid) {
+            var d = document.getElementById("key_botton5");
+            d.style.backgroundImage = "url(../../Images/jdh/button-c.png)";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function botton5_up() {
+            var d = document.getElementById("key_botton5");
+            d.style.backgroundImage = "url(../../Images/jdh/button.png)";
+        }
+        function botton6_down(gatewayid, contollerid, hotelid, keyid) {
+            var d = document.getElementById("key_botton6");
+            d.style.backgroundImage = "url(../../Images/jdh/button-c.png)";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function botton6_up() {
+            var d = document.getElementById("key_botton6");
+            d.style.backgroundImage = "url(../../Images/jdh/button.png)";
+        }
+        function botton7_down(gatewayid, contollerid, hotelid, keyid) {
+            var d = document.getElementById("key_botton7");
+            d.style.backgroundImage = "url(../../Images/jdh/button-c.png)";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function botton7_up() {
+            var d = document.getElementById("key_botton7");
+            d.style.backgroundImage = "url(../../Images/jdh/button.png)";
+        }
+        function botton8_down(gatewayid, contollerid, hotelid, keyid) {
+            var d = document.getElementById("key_botton8");
+            d.style.backgroundImage = "url(../../Images/jdh/button-c.png)";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function botton8_up() {
+            var d = document.getElementById("key_botton8");
+            d.style.backgroundImage = "url(../../Images/jdh/button.png)";
+        }
+        function botton9_down(gatewayid, contollerid, hotelid, keyid) {
+            var d = document.getElementById("key_botton9");
+            d.style.backgroundImage = "url(../../Images/jdh/button-c.png)";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function botton9_up() {
+            var d = document.getElementById("key_botton9");
+            d.style.backgroundImage = "url(../../Images/jdh/button.png)";
+        }
+        function botton10_down(gatewayid, contollerid, hotelid, keyid) {
+            var d = document.getElementById("key_botton10");
+            d.style.backgroundImage = "url(../../Images/jdh/button-c.png)";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function botton10_up() {
+            var d = document.getElementById("key_botton10");
+            d.style.backgroundImage = "url(../../Images/jdh/button.png)";
+        }
+        function botton11_down(gatewayid, contollerid, hotelid, keyid) {
+            var d = document.getElementById("key_botton11");
+            d.style.backgroundImage = "url(../../Images/jdh/button-c.png)";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function botton11_up() {
+            var d = document.getElementById("key_botton11");
+            d.style.backgroundImage = "url(../../Images/jdh/button.png)";
+        }
+        function botton12_down(gatewayid, contollerid, hotelid, keyid) {
+            var d = document.getElementById("key_botton12");
+            d.style.backgroundImage = "url(../../Images/jdh/button-c.png)";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function botton12_up() {
+            var d = document.getElementById("key_botton12");
+            d.style.backgroundImage = "url(../../Images/jdh/button.png)";
+        }
+    </script>
+</body>
+</html>

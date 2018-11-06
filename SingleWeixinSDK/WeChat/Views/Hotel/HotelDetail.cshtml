@@ -1,0 +1,350 @@
+﻿@{
+    ViewBag.Title = "View";
+}
+@model Model.HotelDetailM
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+    <title>@Model.storeDetailM.str_StoreName</title>
+
+    <link rel="stylesheet" href="/Content/amazeui.min.css">
+    <link rel="stylesheet" href="/Content/app.css">
+    <link rel="stylesheet" href="~/Content/public.css">
+    <link href="/Content/bootstrap.min.css" rel="stylesheet">
+    <link href="/Content/amazeui.swiper.min.css" rel="stylesheet">
+    <!--[if (gte IE 9)|!(IE)]><!-->
+    <script src="/Scripts/jquery-1.10.2.min.js"></script>
+    <!--<![endif]-->
+    <!--[if lte IE 8 ]>
+    <script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+    <script src="assets/js/amazeui.ie8polyfill.min.js"></script>
+    <![endif]-->
+    <script src="/Scripts/amazeui.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+    <script src="/Scripts/amazeui.swiper.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+</head>
+<body>
+    @*<div data-am-sticky>
+            <div class="am-u-sm-12 am-vertical-align" style="height:55px;text-align:center;background-color:rgba(51,51,51,0.2);">
+                <text class="am-vertical-align-middle" style="">东方巴黎酒店</text>
+            </div>
+        </div>*@
+    @*<div data-am-sticky>
+            <div class="header">
+                <div class="am-u-sm-2 am-vertical-align" style="height:55px;text-align:center;">
+
+                </div>
+                <div class="am-u-sm-8 am-vertical-align" style="height:55px;text-align:center;">
+                    <text class="am-vertical-align-middle" style="font-size:16px;color:#ffffff;">@Model.storeDetailM.str_StoreFullName</text>
+                </div>
+                <div class="am-u-sm-2" style="height:55px;">
+                </div>
+            </div>
+        </div>*@
+
+    <div class="am-g">
+        <div class="am-u-sm-12">
+            @*<div id="shuffling" class="carousel slide" data-ride="carousel" data-interval="3000">
+                    <div class="carousel-inner">
+                        @foreach (Model.StoreImgM m in Model.listimg)
+                        {
+                            if (m.order == 1)
+                            {
+                                <div class="item active">
+                                    <img src="@m.str_DLPath" title="" class="img-responsive">
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="item">
+                                    <img src="@m.str_DLPath" title="" class="img-responsive">
+                                </div>
+                            }
+                        }
+                    </div>
+
+                </div>*@
+            <!-- Slider 主容器，必需 -->
+            <div class="swiper-container" id="swipercontainer">
+
+                <!-- slides 容器，必需 -->
+                <div class="swiper-wrapper">
+                    <!-- Slides -->
+                    @foreach (Model.StoreImgM m in Model.listimg)
+                    {
+                        <div class="swiper-slide"><img src="@m.str_DLPath" title="" style="height:250px;width:100%;"></div>
+                    }
+                    
+                    @*<div class="swiper-slide">Slide 2</div>
+                    <div class="swiper-slide">Slide 3</div>
+                    ...*@
+                </div>
+
+                <!-- 分页容器，可选 -->
+                <div class="swiper-pagination"></div>
+
+                <!-- 上下翻页箭头，可选 -->
+                @*<div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>*@
+
+                <!-- 滚动条容器，可选 -->
+                @*<div class="swiper-scrollbar"></div>*@
+            </div>
+        </div>
+    </div>
+    <div class="am-g">
+        <div class="am-u-sm-12" style="height:50px;" onclick="goHotelComment()">
+            <div class="am-u-sm-8 am-vertical-align" style="height:50px;">
+                <text class="am-vertical-align-middle" style="font-weight:bold;margin-left:10px;">好评率:@Model.str_Good</text>
+            </div>
+            <div class="am-u-sm-4 am-vertical-align" style="text-align:center;height:50px;">
+                <text class="am-vertical-align-middle" style="font-weight:bold;">评论 ( @Model.Ing_TotalComment )<span class="am-icon-angle-right" style="margin-left:5px;"></span></text>
+            </div>
+        </div>
+    </div>
+    <div class="am-u-sm-12" style="height:1px;border-top:1px solid #d5d5d5;">
+    </div>
+    <div class="am-g" style="padding:10px!important;">
+        <div class="am-u-sm-12" style="border:1px solid #d5d5d5;height:60px;" onclick="openStoreLocation()">
+            <div class="am-u-sm-9 am-vertical-align" style="height:60px;">
+                <span class="am-vertical-align-middle" style="margin-left:10px;font-size:13px;"><text style="font-weight:bold;font-size:16px;"> 位置</text><br /> @Model.storeDetailM.str_Address</span>
+            </div>
+            <div class="am-u-sm-3" style="height:60px;">
+                <img src="~/Images/map.png" style="width:100%;height:100%;" />
+            </div>
+        </div>
+        <div class="am-u-sm-12" style="height:50px;">
+            <button type="button" class="am-btn  am-btn-block" style="height:40px; border-radius:5px;margin-top:10px;background:#E1662D;color:#fff;font-weight:bold;" onclick="telphone('@Model.storeDetailM.str_hotTel')">电话:@Model.storeDetailM.str_hotTel</button>
+        </div>
+        <div class="am-u-sm-12 am-vertical-align" style="height:40px;">
+            <text class="am-vertical-align-middle" style="font-weight:bold;">酒店设施</text>
+        </div>
+        <div class="am-u-sm-4  am-vertical-align" style="height:40px;padding:10px!important;text-align:center;">
+            @if (Model.storeDetailM.Ing_Park == 1)
+            {
+                <img class="am-vertical-align-middle" src="~/Images/park.png" style="height:20px;width:20px;" />
+            }
+            else
+            {
+                <img class="am-vertical-align-middle" src="~/Images/nopark.png" style="height:20px;width:20px;" />
+            }
+            <text class="am-vertical-align-middle" style="margin-left:5px;font-weight:bold;">停车场</text>
+        </div>
+        <div class="am-u-sm-4  am-vertical-align" style="height:40px;padding:10px!important;text-align:center;">
+            @if (Model.storeDetailM.Ing_Restaurant == 1)
+            {
+                <img class="am-vertical-align-middle" src="~/Images/restaurant.png" style="height:20px;width:20px;" />
+            }
+            else
+            {
+                <img class="am-vertical-align-middle" src="~/Images/norestaurant.png" style="height:20px;width:20px;" />
+            }
+            <text class="am-vertical-align-middle" style="margin-left:5px;font-weight:bold;">餐饮</text>
+        </div>
+        <div class="am-u-sm-4  am-vertical-align" style="height:40px;padding:10px!important;text-align:center;">
+            @if (Model.storeDetailM.Ing_wifi == 1)
+            {
+                <img class="am-vertical-align-middle" src="~/Images/wifi.png" style="height:20px;width:20px;" />
+            }
+            else
+            {
+                <img class="am-vertical-align-middle" src="~/Images/nowifi.png" style="height:20px;width:20px;" />
+            }
+            <text class="am-vertical-align-middle" style="margin-left:5px;font-weight:bold;">无线网</text>
+        </div>
+        <div class="am-u-sm-12 am-vertical-align" style="height:40px;">
+            <text class="am-vertical-align-middle" style="font-weight:bold;">酒店周边</text>
+        </div>
+        <div data-am-widget="tabs"
+             class="am-tabs am-tabs-d2">
+            <ul class="am-tabs-nav am-cf">
+                <li class="am-active"><a href="[data-tab-panel-0]">银行</a></li>
+                <li class=""><a href="[data-tab-panel-1]">商场</a></li>
+                <li class=""><a href="[data-tab-panel-2]">旅游</a></li>
+                <li class=""><a href="[data-tab-panel-3]">美食</a></li>
+            </ul>
+            <div class="am-tabs-bd">
+                <div data-tab-panel-0 class="am-tab-panel am-active">
+                    <div class="am-u-sm-12">
+                        @if (Model.strbank.Count == 0)
+                        {
+                            <div class="am-u-sm-12" style="padding:10px!important;">暂无银行信息</div>
+                        }
+                        else
+                        {
+                            foreach (Model.ZBInfoM m in Model.strbank)
+                            {
+                                <div class="am-u-sm-12" style="height:70px;" onclick="opennear(@m.lat,@m.lng,'@m.name','@m.address')">
+                                    <div class="am-u-sm-10  am-vertical-align" style="height:70px;">
+                                        <span class="am-vertical-align-middle" style="margin-left:10px;font-size:12px;"><text style="font-weight:bold;font-size:14px;">@m.name</text><br />@m.address (距酒店 @m.distance 米)</span>
+                                    </div>
+                                    <div class="am-u-sm-2  am-vertical-align" style="text-align:center;height:70px;">
+                                        <img src="~/Images/locate.png" style="height:20px;width:20px;margin-right:5px;" class="am-vertical-align-middle" />
+                                        <span class="am-icon-angle-right am-vertical-align-middle"></span>
+                                    </div>
+                                    <div class="am-u-sm-12" style="height:1px;border-top:1px solid #d5d5d5;">
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                    </div>
+
+                </div>
+                <div data-tab-panel-1 class="am-tab-panel ">
+                    <div class="am-u-sm-12">
+                        @if (Model.strmarket.Count == 0)
+                        {
+                            <div class="am-u-sm-12" style="padding:10px!important;">暂无商场信息</div>
+                        }
+                        else
+                        {
+                            foreach (Model.ZBInfoM m in Model.strmarket)
+                            {
+                                <div class="am-u-sm-12" style="height:70px;" onclick="opennear(@m.lat,@m.lng,'@m.name','@m.address')">
+                                    <div class="am-u-sm-10  am-vertical-align" style="height:70px;">
+                                        <span class="am-vertical-align-middle" style="margin-left:10px;font-size:12px;"><text style="font-weight:bold;font-size:14px;">@m.name</text><br />@m.address (距酒店 @m.distance 米)</span>
+                                    </div>
+                                    <div class="am-u-sm-2  am-vertical-align" style="text-align:center;height:70px;">
+                                        <img src="~/Images/locate.png" style="height:20px;width:20px;margin-right:5px;" class="am-vertical-align-middle" />
+                                        <span class="am-icon-angle-right am-vertical-align-middle"></span>
+                                    </div>
+                                    <div class="am-u-sm-12" style="height:1px;border-top:1px solid #d5d5d5;">
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                    </div>
+                </div>
+                <div data-tab-panel-2 class="am-tab-panel ">
+                    <div class="am-u-sm-12">
+                        @if (Model.strtour.Count == 0)
+                        {
+                            <div class="am-u-sm-12" style="padding:10px!important;">暂无旅游信息</div>
+                        }
+                        else
+                        {
+                            foreach (Model.ZBInfoM m in Model.strtour)
+                            {
+                                <div class="am-u-sm-12" style="height:70px;" onclick="opennear(@m.lat,@m.lng,'@m.name','@m.address')">
+                                    <div class="am-u-sm-10  am-vertical-align" style="height:70px;">
+                                        <span class="am-vertical-align-middle" style="margin-left:10px;font-size:12px;"><text style="font-weight:bold;font-size:14px;">@m.name</text><br />@m.address (距酒店 @m.distance 米)</span>
+                                    </div>
+                                    <div class="am-u-sm-2  am-vertical-align" style="text-align:center;height:70px;">
+                                        <img src="~/Images/locate.png" style="height:20px;width:20px;margin-right:5px;" class="am-vertical-align-middle" />
+                                        <span class="am-icon-angle-right am-vertical-align-middle"></span>
+                                    </div>
+                                    <div class="am-u-sm-12" style="height:1px;border-top:1px solid #d5d5d5;">
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                    </div>
+                </div>
+                <div data-tab-panel-3 class="am-tab-panel ">
+                    <div class="am-u-sm-12">
+                        @if (Model.strdiet.Count == 0)
+                        {
+                            <div class="am-u-sm-12" style="padding:10px!important;">暂无美食信息</div>
+                        }
+                        else
+                        {
+                            foreach (Model.ZBInfoM m in Model.strdiet)
+                            {
+                                <div class="am-u-sm-12" style="height:70px;" onclick="opennear(@m.lat,@m.lng,'@m.name','@m.address')">
+                                    <div class="am-u-sm-10  am-vertical-align" style="height:70px;">
+                                        <span class="am-vertical-align-middle" style="margin-left:10px;font-size:12px;"><text style="font-weight:bold;font-size:14px;">@m.name</text><br />@m.address (距酒店 @m.distance 米)</span>
+                                    </div>
+                                    <div class="am-u-sm-2  am-vertical-align" style="text-align:center;height:70px;">
+                                        <img src="~/Images/locate.png" style="height:20px;width:20px;margin-right:5px;" class="am-vertical-align-middle" />
+                                        <span class="am-icon-angle-right am-vertical-align-middle"></span>
+                                    </div>
+                                    <div class="am-u-sm-12" style="height:1px;border-top:1px solid #d5d5d5;">
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="am-u-sm-12" style="height:50px;"/>
+    <div class="am-u-sm-12" style="height:50px;position:fixed;
+    bottom:0px;z-index:10000;">
+        <button class="am-btn am-btn-block" type="button" style="height:50px;background-color:rgba(235,119,69,0.9);color:#fff;font-weight:bold;" onclick="goIndex()">立即预订</button>
+    </div>
+    <script>
+        $('#swipercontainer').swiper(
+            {
+                pagination: '#swipercontainer .swiper-pagination',
+                paginationClickable: true,
+                spaceBetween: 0,
+                autoplay:2000,
+                effect:'coverflow',
+                coverflow: { rotate: 50, stretch: 0, depth: 100, modifier: 1, slideShadows : false }
+            }
+            );
+        wx.config({
+            debug: false,// 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: '@Model.searchM.appId',// 必填，公众号的唯一标识
+            timestamp: '@Model.searchM.timestamp',// 必填，生成签名的时间戳
+            nonceStr: '@Model.searchM.nonceStr',// 必填，生成签名的随机串
+            signature: '@Model.searchM.signature',// 必填，签名，
+            jsApiList: [
+            'previewImage',
+            'openLocation',
+            'getLocation'
+            ]
+        });
+        function goIndex() {
+            location.href = "/Hotel/Index?storeid="+@Model.storeDetailM.Ing_StoreID;
+        }
+        ///打开地图
+        function opennear(lat,lng,name,address,url)
+        {
+            console.log("lat:"+lat+",lng:"+lng+",name:"+name+",address:"+address+",url:"+url);
+            wx.openLocation({
+                latitude: lat,
+                longitude: lng,
+                name:name,
+                address:address,
+                scale: 14,
+                infoUrl: url
+            });
+        }
+        function goHotelComment(){
+            location.href = "/Hotel/HotelComments?storeid="+@Model.storeDetailM.Ing_StoreID;
+        }
+        function openStoreLocation(){
+            if('@Model.storeDetailM.str_port_y'==-1 || '@Model.storeDetailM.str_port_x'==-1)
+            {
+                Dialog("","该门店没有配置坐标信息",1);
+                return;
+            }
+            wx.openLocation({
+                latitude: @Model.storeDetailM.str_port_y,
+                longitude: @Model.storeDetailM.str_port_x,
+                name:'@Model.storeDetailM.str_StoreName',
+                address:'@Model.searchM.cityname'+'@Model.storeDetailM.str_Address',
+                scale: 14,
+                infoUrl: ''
+            });
+        }
+        function telphone(number){
+            var href="tel:"+number;
+            window.location.href=href;
+        }
+    </script>
+</body>
+</html>

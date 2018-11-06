@@ -1,0 +1,456 @@
+﻿@{
+    Layout = null;
+}
+@using Model.SmartControl
+@model Model.SmartControl.ControlViewM
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+    <script src="/scripts/jquery-1.10.2.js"></script>
+    <link href="~/Content/smart.css" rel="stylesheet">
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/new/style.css" rel="stylesheet">
+    <link href="/Content/new/style1.css" rel="stylesheet">
+    <script src="/Scripts/Dialog.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="/Content/weui.css" />
+    <link rel="stylesheet" href="/Content/jquery.toast.css">
+    <script type="text/javascript" src="~/Scripts/jquery.toast.js"></script>
+    <script src="/scripts/jquery-1.10.2.min.js"></script>
+    <script src="/scripts/bootstrap.min.js"></script>
+
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+
+
+    <link rel="stylesheet" type="text/css" href="/Content/date/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/date/default.css">
+    <link rel="stylesheet" href="/Content/date/daterangepicker.css" />
+    <script src="/Scripts/date/moment.min.js"></script>
+    <script src="/Scripts/date/jquery.daterangepicker.js"></script>
+    <script src="/Scripts/date/seldate.js"></script>
+    <title>智能遥控</title>
+</head>
+<body style="background-color:#F0EFF5;">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-2 col-lg-2 col-sm-2 col-md-2 back">
+                <img  class="img_back" src="~/Images/smart/left.png" ontouchend="back_home()" />
+            </div>
+            <div class="col-xs-8 col-lg-8 col-sm-8 col-md-2 title">
+                <text style="font-size:22px;color:#ffffff;">@Model.nickname</text>
+            </div>
+            <div class="col-xs-2 col-lg-2 col-sm-2 col-md-2 menu">
+
+            </div>
+        </div>
+        <div class="row" style="padding:20px 20px 0 20px;">
+            <div class="col-xs-3 col-lg-3 col-sm-3 col-md-3 text-center normalsize">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(SoundKeyM.MUTE.ToString()))
+                {
+                    <img ontouchstart="jy_down('@Model.gatewayid','@Model.contollerid','@Model.hotelid','@SoundKeyM.MUTE')" ontouchend="jy_up()" id="key_jy" src="~/Images/yx/静音.png" />
+                }
+                else
+                {
+                    <img src="~/Images/yx/静音-h.png" />
+                }
+            </div>
+            <div class="col-xs-3 col-lg-3col-sm-3 col-md-3 text-center">
+            </div>
+            <div class="col-xs-3 col-lg-3col-sm-3 col-md-3 text-center">
+            </div>
+            <div class="col-xs-3 col-lg-3 col-sm-3 col-md-3 text-center normalsize">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(SoundKeyM.POWER.ToString()))
+                {
+                    <img ontouchstart="gb_down('@Model.gatewayid','@Model.contollerid','@Model.hotelid','@SoundKeyM.POWER')" ontouchend="gb_up()" id="key_gb" src="~/Images/yx/关闭.png" />
+                }
+                else
+                {
+                    <img src="~/Images/yx/关闭-h.png" />
+                }
+            </div>
+        </div>
+        <div class="row" style="padding:30px 10px 10px 10px;">
+            <div id="control_info" class="sound_control div_center" style="position:relative;height:170px;width:170px;">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(SoundKeyM.VUP.ToString()))
+                {
+                    <img style="width:120px;height:85px;" id="key_top" src="~/Images/yx/t.png" class="sound_top" />
+                }
+                else
+                {
+                    <img style="width:120px;height:85px;" src="~/Images/yx/t-h.png" class="sound_top" />
+                }
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(SoundKeyM.VDOWN.ToString()))
+                {
+                    <img style="width:120px;height:85px;" id="key_bottom" src="~/Images/yx/b.png" class="sound_bottom" />
+                }
+                else
+                {
+                    <img style="width:120px;height:85px;" src="~/Images/yx/b-h.png" class="sound_bottom" />
+                }
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(SoundKeyM.SDOWN.ToString()))
+                {
+                    <img style="width:85px;height:120px;" id="key_left" src="~/Images/yx/l.png" class="sound_left" />
+                }
+                else
+                {
+                    <img style="width:85px;height:120px;" src="~/Images/yx/l-h.png" class="sound_left" />
+                }
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(SoundKeyM.SUP.ToString()))
+                {
+                    <img style="width:85px;height:120px;" id="key_right" src="~/Images/yx/r.png" class="sound_right" />
+                }
+                else
+                {
+                    <img style="width:85px;height:120px;" src="~/Images/yx/r-h.png" class="sound_right" />
+                }
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(SoundKeyM.PAUSE.ToString()))
+                {
+                    <img style="width:73px;height:73px;" ontouchstart="ok_down('@Model.gatewayid','@Model.contollerid','@Model.hotelid','@SoundKeyM.PAUSE')" ontouchend="ok_up()" id="key_ok" src="~/Images/yx/音量.png" class="sound_ok" />
+                }
+                else
+                {
+                    <img style="width:73px;height:73px;" src="~/Images/yx/音量-h.png" class="sound_ok" />
+                }
+            </div>
+        </div>
+        <div class="row" style="padding:30px 20px 0 20px;">
+            <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center normalsize">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(SoundKeyM.EFFECT.ToString()))
+                {
+                    <img ontouchstart="yx_down('@Model.gatewayid','@Model.contollerid','@Model.hotelid','@SoundKeyM.EFFECT')" ontouchend="yx_up()" id="key_yx" src="~/Images/yx/音效.png" />
+                }
+                else
+                {
+                    <img src="~/Images/yx/音效-h.png" />
+                }
+            </div>
+            <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center normalsize">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(SoundKeyM.TD.ToString()))
+                {
+                    <img ontouchstart="td_down('@Model.gatewayid', '@Model.contollerid', '@Model.hotelid', '@SoundKeyM.TD')" ontouchend="td_up()" id="key_td" src="~/Images/yx/3D.png" />
+                }
+                else
+                {
+                    <img src="~/Images/yx/3D-h.png" />
+                }
+            </div>
+            <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center normalsize">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(SoundKeyM.BULE.ToString()))
+                {
+                    <img ontouchstart="ly_down('@Model.gatewayid', '@Model.contollerid', '@Model.hotelid', '@SoundKeyM.BULE')" ontouchend="ly_up()" id="key_ly" src="~/Images/yx/蓝牙.png" />
+                }
+                else
+                {
+                    <img src="~/Images/yx/蓝牙-h.png" />
+                }
+            </div>
+        </div>
+        <div class="row" style="padding:30px 20px 0 20px;">
+            <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center normalsize">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(SoundKeyM.USB.ToString()))
+                {
+                    <img ontouchstart="upang_down('@Model.gatewayid', '@Model.contollerid', '@Model.hotelid', '@SoundKeyM.USB')" ontouchend="upang_up()" id="key_upang" src="~/Images/yx/U盘.png" />
+                }
+                else
+                {
+                    <img src="~/Images/yx/U盘-h.png" />
+                }
+            </div>
+            <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center normalsize">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(SoundKeyM.AUX.ToString()))
+                {
+                    <img ontouchstart="aux_down('@Model.gatewayid', '@Model.contollerid', '@Model.hotelid', '@SoundKeyM.AUX')" ontouchend="aux_up()" id="key_aux" src="~/Images/yx/AUX-.png" />
+                }
+                else
+                {
+                    <img src="~/Images/yx/AUX--h.png" />
+                }
+            </div>
+            <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center normalsize">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(SoundKeyM.TF.ToString()))
+                {
+                    <img ontouchstart="tcard_down('@Model.gatewayid','@Model.contollerid','@Model.hotelid','@SoundKeyM.TF')" ontouchend="tcard_up()" id="key_tcard" src="~/Images/yx/T卡.png" />
+                }
+                else
+                {
+                    <img src="~/Images/yx/T卡-h.png" />
+                }
+            </div>
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        //自定义弹框
+        function Toast(msg, duration) {
+            duration = isNaN(duration) ? 3000 : duration;
+            var m = document.createElement('div');
+            m.innerHTML = msg;
+            m.style.cssText = "width: 50%;min-width: 100px;opacity: 0.7;height: 30px;color: rgb(255, 255, 255);line-height: 30px;text-align: center;border-radius: 5px;position: fixed;top: 90%;left: 25%;z-index: 999999;background: rgb(30, 30, 30);font-size: 12px;";
+            document.body.appendChild(m);
+            setTimeout(function () {
+                var d = 0.5;
+                m.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in';
+                m.style.opacity = '0';
+                setTimeout(function () { document.body.removeChild(m) }, d * 1000);
+            }, duration);
+        }
+        function controlDevice(gatewayid, contollerid, hotelid, keyid, param) {
+            var formParam = {
+                gatewayid: gatewayid, hotelid: hotelid, contollerid: contollerid,
+                type: 0, keyid: keyid, param: param, nickname: '@Model.nickname', str_RoomNo: '@Model.str_RoomNo',
+                Ing_CustID: '@Model.Ing_CustID', str_CustName: '@Model.str_CustName', str_OpenID: '@Model.str_OpenID', Ing_MasterID: '@Model.Ing_MasterID'
+            };
+            console.log(formParam);
+            $.ajax({
+                type: 'post',
+                url: '/Smart/ControlDevice',// 跳转到 action
+                data: formParam,
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    if (data.result == "2003") {
+
+                    } else {
+                        //Dialog("", data.msg, 1, "");
+                        Toast(data.msg, 3000);
+                    }
+                },
+                error: function () {
+                    //Dialog("", "异常！", 1, "");
+                    Toast("异常！", 3000);
+
+                }
+            });
+        }
+        function back_home() {
+            var url = "/Smart/Index";
+            window.location.href = url;
+        }
+        function jy_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_jy");
+            img.src = "../../Images/yx/静音-c.png";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function jy_up() {
+            var img = document.getElementById("key_jy");
+            img.src = "../../Images/yx/静音.png";
+        }
+        function gb_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_gb");
+            img.src = "../../Images/yx/关闭-c.png";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function gb_up() {
+            var img = document.getElementById("key_gb");
+            img.src = "../../Images/yx/关闭.png";
+        }
+        function top_down() {
+            var img = document.getElementById("key_top");
+            img.src = "../../Images/yx/t-c.png";
+            controlDevice('@Model.gatewayid', '@Model.contollerid', '@Model.hotelid', '@SoundKeyM.VUP', "1");
+        }
+        function top_up() {
+            var img = document.getElementById("key_top");
+            img.src = "../../Images/yx/t.png";
+        }
+        function left_down() {
+            var img = document.getElementById("key_left");
+            img.src = "../../Images/yx/l-c.png";
+            controlDevice('@Model.gatewayid', '@Model.contollerid', '@Model.hotelid', '@SoundKeyM.SDOWN', "1");
+        }
+        function left_up() {
+            var img = document.getElementById("key_left");
+            img.src = "../../Images/yx/l.png";
+        }
+        function right_down() {
+            var img = document.getElementById("key_right");
+            img.src = "../../Images/yx/r-c.png";
+            controlDevice('@Model.gatewayid', '@Model.contollerid', '@Model.hotelid', '@SoundKeyM.SUP', "1");
+        }
+        function right_up() {
+            var img = document.getElementById("key_right");
+            img.src = "../../Images/yx/r.png";
+        }
+        function bottom_down() {
+            var img = document.getElementById("key_bottom");
+            img.src = "../../Images/yx/b-c.png";
+            controlDevice('@Model.gatewayid', '@Model.contollerid', '@Model.hotelid', '@SoundKeyM.VDOWN', "1");
+        }
+        function bottom_up() {
+            var img = document.getElementById("key_bottom");
+            img.src = "../../Images/yx/b.png";
+        }
+        function ok_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_ok");
+            img.src = "../../Images/yx/音量-c.png";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function ok_up() {
+            var img = document.getElementById("key_ok");
+            img.src = "../../Images/yx/音量.png";
+        }
+        function yx_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_yx");
+            img.src = "../../Images/yx/音效-c.png";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function yx_up() {
+            var img = document.getElementById("key_yx");
+            img.src = "../../Images/yx/音效.png";
+        }
+        function td_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_td");
+            img.src = "../../Images/yx/3D-c.png";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function td_up() {
+            var img = document.getElementById("key_td");
+            img.src = "../../Images/yx/3D.png";
+        }
+        function ly_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_ly");
+            img.src = "../../Images/yx/蓝牙-c.png";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function ly_up() {
+            var img = document.getElementById("key_ly");
+            img.src = "../../Images/yx/蓝牙.png";
+        }
+        function upang_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_upang");
+            img.src = "../../Images/yx/U盘-c.png";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function upang_up() {
+            var img = document.getElementById("key_upang");
+            img.src = "../../Images/yx/U盘.png";
+        }
+        function aux_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_aux");
+            img.src = "../../Images/yx/AUX-c.png";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function aux_up() {
+            var img = document.getElementById("key_aux");
+            img.src = "../../Images/yx/AUX-.png";
+        }
+        function tcard_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_tcard");
+            img.src = "../../Images/yx/T卡-c.png";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, "1");
+        }
+        function tcard_up() {
+            var img = document.getElementById("key_tcard");
+            img.src = "../../Images/yx/T卡.png";
+        }
+        var type = 0;
+        function handleTouchEvent(event) {
+            var control = document.getElementById("control_info");
+            //只跟踪一次触摸
+            //if (event.touches.length == 1) {
+            switch (event.type) {
+                case "touchstart":
+                    var top = event.touches[0].clientY - control.getBoundingClientRect().top;
+                    var left = event.touches[0].clientX - control.getBoundingClientRect().left;
+                    var centerx = 85;
+                    var centery = 85;
+                    var dis = getDistance(centerx, centery, left, top);
+                    var angle = getAngle(centerx, centery, left, top);
+                    if (dis >= 37.5 && dis <= 85) {
+                        if (angle > 0 && angle <= 45) {
+                            top_down();
+                            type = 1;
+                        } else if (angle > 45 && angle <= 135) {
+                            right_down();
+                            type = 2;
+                        } else if (angle > 135 && angle <= 225) {
+                            bottom_down();
+                            type = 3
+                        } else if (angle > 225 && angle <= 315) {
+                            left_down();
+                            type = 4;
+                        } else if (angle > 315 && angle <= 360) {
+                            top_down();
+                            type = 1;
+                        } else {
+
+                        }
+                    } else {
+                        type = 0;
+                    }
+                    //console.log(dis + "," + angle);
+                    // console.log("Touch started (" + event.touches[0].clientX + "," + event.touches[0].clientY + ")");
+                    break;
+                case "touchend":
+                    if (type == 1) {
+                        top_up();
+                    } else if (type == 2) {
+                        right_up();
+                    } else if (type == 3) {
+                        bottom_up();
+                    } else if (type == 4) {
+                        left_up();
+                    } else {
+
+                    }
+                    // console.log("Touch ended (" + event.changedTouches[0].clientX + "," + event.changeTouches[0].clientY + ")");
+                    break;
+                case "touchmove":
+                    event.preventDefault(); //阻止滚动
+                    console.log("Touch moved (" + event.changedTouches[0].clientX + "," + event.changedTouches[0].clientY + ")");
+                    break;
+            }
+            // }
+        }
+        document.addEventListener("touchstart", handleTouchEvent, false);
+        document.addEventListener("touchend", handleTouchEvent, false);
+        function getDistance(px, py, mx, my) {
+            var calX = mx - px;
+            var calY = my - py;
+            return Math.pow((calX * calX + calY * calY), 0.5);
+        }
+        function getAngle(px, py, mx, my) {//获得人物中心和鼠标坐标连线，与y轴正半轴之间的夹角
+            var x = Math.abs(px - mx);
+            var y = Math.abs(py - my);
+            var z = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+            var cos = y / z;
+            var radina = Math.acos(cos);//用反三角函数求弧度
+            var angle = Math.floor(180 / (Math.PI / radina));//将弧度转换成角度
+
+            if (mx > px && my > py) {//鼠标在第四象限
+                angle = 180 - angle;
+            }
+
+            if (mx == px && my > py) {//鼠标在y轴负方向上
+                angle = 180;
+            }
+
+            if (mx > px && my == py) {//鼠标在x轴正方向上
+                angle = 90;
+            }
+
+            if (mx < px && my > py) {//鼠标在第三象限
+                angle = 180 + angle;
+            }
+
+            if (mx < px && my == py) {//鼠标在x轴负方向
+                angle = 270;
+            }
+
+            if (mx < px && my < py) {//鼠标在第二象限
+                angle = 360 - angle;
+            }
+
+
+
+            return angle;
+        }
+    </script>
+</body>
+</html>

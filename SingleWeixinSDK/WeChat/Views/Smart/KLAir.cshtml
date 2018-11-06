@@ -1,0 +1,491 @@
+﻿@{
+    Layout = null;
+}
+@using Model.SmartControl
+@model Model.SmartControl.ControlViewM
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+    <script src="/scripts/jquery-1.10.2.js"></script>
+    <link href="~/Content/smart.css" rel="stylesheet">
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/new/style.css" rel="stylesheet">
+    <link href="/Content/new/style1.css" rel="stylesheet">
+    <script src="/Scripts/Dialog.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="/Content/weui.css" />
+    <link rel="stylesheet" href="/Content/jquery.toast.css">
+    <script type="text/javascript" src="~/Scripts/jquery.toast.js"></script>
+    <script src="/scripts/jquery-1.10.2.min.js"></script>
+    <script src="/scripts/bootstrap.min.js"></script>
+
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+
+
+    <link rel="stylesheet" type="text/css" href="/Content/date/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/date/default.css">
+    <link rel="stylesheet" href="/Content/date/daterangepicker.css" />
+    <script src="/Scripts/date/moment.min.js"></script>
+    <script src="/Scripts/date/jquery.daterangepicker.js"></script>
+    <script src="/Scripts/date/seldate.js"></script>
+    <title>智能遥控</title>
+</head>
+<body style="background-color:#F0EFF5;">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-2 col-lg-2 col-sm-2 col-md-2 back">
+                <img  class="img_back" src="~/Images/smart/left.png" ontouchend="back_home()" />
+            </div>
+            <div class="col-xs-8 col-lg-8 col-sm-8 col-md-2 title">
+                <text style="font-size:22px;color:#ffffff;">@Model.nickname</text>
+            </div>
+            <div class="col-xs-2 col-lg-2 col-sm-2 col-md-2 menu">
+
+            </div>
+        </div>
+        <div class="row" style="padding:20px 0px 0 0px;">
+            <div class="col-xs-1 col-lg-1 col-sm-1 col-md-1">
+
+            </div>
+            <div class="air_info col-xs-10 col-lg-10 col-sm-10 col-md-10">
+                <div class="air_temp">
+                    <text id="temp_num" style="font-size:40px;font-weight:bold;">--°C</text>
+                </div>
+                <div class="air_speed">
+                    <text id="fan_speed" style="font-size:18px;font-weight:500;">风速</text>
+                </div>
+            </div>
+        </div>
+        <div class="row normalsize" style="padding:10px 20px 0 20px;">
+            <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(AirKeyM.ON.ToString()))
+                {
+                    <img ontouchstart="dy_down('@Model.gatewayid','@Model.contollerid','@Model.hotelid','@AirKeyM.ON')" ontouchend="dy_up()" id="key_dy" src="~/Images/klair/关闭.png" />
+                }
+                else
+                {
+                    <img src="~/Images/klair/关闭-h.png" />
+                }
+                <p class="p1">电源</p>
+            </div>
+            <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(AirKeyM.COOL.ToString()))
+                {
+                    <img ontouchstart="zl_down('@Model.gatewayid', '@Model.contollerid', '@Model.hotelid', '@AirKeyM.COOL')" ontouchend="zl_up()" id="key_zl" src="~/Images/klair/制冷.png" />
+                }
+                else
+                {
+                    <img src="~/Images/klair/制冷-h.png" />
+                }
+                <p class="p1">制冷</p>
+            </div>
+            <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(AirKeyM.AUTO.ToString()))
+                {
+                    <img ontouchstart="zd_down('@Model.gatewayid', '@Model.contollerid', '@Model.hotelid', '@AirKeyM.AUTO')" ontouchend="zd_up()" id="key_zd" src="~/Images/klair/AUTO.png" />
+                }
+                else
+                {
+                    <img src="~/Images/klair/AUTO-h.png" />
+                }
+                <p class="p1">自动</p>
+            </div>
+        </div>
+        <div class="row normalsize" style="padding:10px 20px 0 20px;">
+            <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(AirKeyM.HEAT.ToString()))
+                {
+                    <img ontouchstart="zr_down('@Model.gatewayid', '@Model.contollerid', '@Model.hotelid', '@AirKeyM.HEAT')" ontouchend="zr_up()" id="key_zr" src="~/Images/klair/制热.png" />
+                }
+                else
+                {
+                    <img src="~/Images/klair/制热-h.png" />
+                }
+                <p class="p1">制热</p>
+            </div>
+            <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(AirKeyM.DRY.ToString()))
+                {
+                    <img ontouchstart="cs_down('@Model.gatewayid', '@Model.contollerid', '@Model.hotelid', '@AirKeyM.DRY')" ontouchend="cs_up()" id="key_cs" src="~/Images/klair/除湿.png" />
+                }
+                else
+                {
+                    <img src="~/Images/klair/除湿-h.png" />
+                }
+                <p class="p1">除湿</p>
+            </div>
+            <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(AirKeyM.FAN.ToString()))
+                {
+                    <img ontouchstart="cf_down('@Model.gatewayid', '@Model.contollerid', '@Model.hotelid', '@AirKeyM.FAN')" ontouchend="cf_up()" id="key_cf" src="~/Images/klair/吹风.png" />
+                }
+                else
+                {
+                    <img src="~/Images/klair/吹风-h.png" />
+                }
+                <p class="p1">吹风</p>
+            </div>
+        </div>
+        <div class="row normalsize" style="padding:10px 20px 0 20px;">
+            <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(AirKeyM.TEMP1.ToString()))
+                {
+                    <img ontouchstart="wdj_down('@Model.gatewayid', '@Model.contollerid', '@Model.hotelid', '@AirKeyM.TEMP1')" ontouchend="wdj_up()" id="key_wdj" src="~/Images/klair/wdj.png" />
+                }
+                else
+                {
+                    <img src="~/Images/klair/wdj-h.png" />
+                }
+                <p class="p1">温度+</p>
+            </div>
+            <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(AirKeyM.TEMP2.ToString()))
+                {
+                    <img ontouchstart="wdf_down('@Model.gatewayid', '@Model.contollerid', '@Model.hotelid', '@AirKeyM.TEMP2')" ontouchend="wdf_up()" id="key_wdf" src="~/Images/klair/温度-.png" />
+                }
+                else
+                {
+                    <img src="~/Images/klair/温度--h.png" />
+                }
+                <p class="p1">温度-</p>
+            </div>
+            <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(AirKeyM.FAN_AUT.ToString()))
+                {
+                    <img ontouchstart="fs_down('@Model.gatewayid', '@Model.contollerid', '@Model.hotelid', '@AirKeyM.FAN_AUT')" ontouchend="fs_up()" id="key_fs" src="~/Images/klair/风速.png" />
+                }
+                else
+                {
+                    <img src="~/Images/klair/风速-h.png" />
+                }
+                <p class="p1">风速</p>
+            </div>
+        </div>
+        <div class="row normalsize" style="padding:10px 20px 0 20px;">
+            <div class="col-xs-4 col-lg-4 col-sm-4 col-md-4 text-center">
+                @if (Model.response.keylabel7.KeyLabel7.ContainsKey(AirKeyM.SW_ON.ToString()))
+                {
+                    <img ontouchstart="cft_down('@Model.gatewayid', '@Model.contollerid', '@Model.hotelid', '@AirKeyM.SW_ON')" ontouchend="cft_up()" id="key_cft" src="~/Images/klair/扫风.png" />
+                }
+                else
+                {
+                    <img src="~/Images/klair/扫风-h.png" />
+                }
+                <p class="p1">扫风</p>
+            </div>
+
+        </div>
+    </div>
+    <script type="text/javascript">
+        var param = "1";
+        var powercount = 0;
+        var fanMode = 0;
+        var swingMode = 0;
+        //自定义弹框
+        function Toast(msg, duration) {
+            duration = isNaN(duration) ? 3000 : duration;
+            var m = document.createElement('div');
+            m.innerHTML = msg;
+            m.style.cssText = "width: 50%;min-width: 100px;opacity: 0.7;height: 30px;color: rgb(255, 255, 255);line-height: 30px;text-align: center;border-radius: 5px;position: fixed;top: 90%;left: 25%;z-index: 999999;background: rgb(30, 30, 30);font-size: 12px;";
+            document.body.appendChild(m);
+            setTimeout(function () {
+                var d = 0.5;
+                m.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in';
+                m.style.opacity = '0';
+                setTimeout(function () { document.body.removeChild(m) }, d * 1000);
+            }, duration);
+        }
+        function controlDevice(gatewayid, contollerid, hotelid, keyid, param) {
+            var formParam = {
+                gatewayid: gatewayid, hotelid: hotelid, contollerid: contollerid,
+                type: 1, keyid: keyid, param: param, nickname: '@Model.nickname', str_RoomNo: '@Model.str_RoomNo',
+                Ing_CustID: '@Model.Ing_CustID', str_CustName: '@Model.str_CustName', str_OpenID: '@Model.str_OpenID', Ing_MasterID: '@Model.Ing_MasterID'
+            };
+            console.log(formParam);
+            $.ajax({
+                type: 'post',
+                url: '/Smart/ControlDevice',// 跳转到 action
+                data: formParam,
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    console.log(param);
+                    console.log(data);
+                    if (data.result == "2003") {
+                        param = data.info.param;
+                        getStatus(gatewayid, contollerid, hotelid, param);
+                    } else {
+                        //Dialog("", data.msg, 1, "");
+                        Toast(data.msg, 3000);
+                    }
+                },
+                error: function () {
+                    //Dialog("", "异常！", 1, "");
+                    Toast("异常！", 3000);
+                }
+            });
+        }
+        function back_home() {
+            var url = "/Smart/Index";
+            window.location.href = url;
+        }
+        function getStatus(gatewayid, contollerid, hotelid,param) {
+            var formParam = {
+                gatewayid: gatewayid, hotelid: hotelid, contollerid: contollerid,
+                type: 1, param: param, nickname: '@Model.nickname', str_RoomNo: '@Model.str_RoomNo',
+                Ing_CustID: '@Model.Ing_CustID', str_CustName: '@Model.str_CustName', str_OpenID: '@Model.str_OpenID', Ing_MasterID: '@Model.Ing_MasterID'
+            };
+            console.log("状态码:" + formParam);
+            $.ajax({
+                type: 'post',
+                url: '/Smart/GetStatus',// 跳转到 action
+                data: formParam,
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    console.log(param);
+                    console.log(data);
+                    if (data.result == "2003") {
+                        $("#temp_num").html(data.info.info.stTemp + "°C");
+                        $("#fan_speed").html("风速  " + data.info.info.stFan);
+                    } else {
+                        //Dialog("", data.msg, 1, "");
+                        Toast(data.msg, 3000);
+                    }
+                },
+                error: function () {
+                    //Dialog("", "获取状态异常！", 1, "");
+                    Toast("获取状态异常！", 3000);
+                }
+            });
+        }
+        function dy_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_dy");
+            img.src = "../../Images/klair/关闭-c.png";
+            if (powercount == 0) {
+
+                param = "1";
+            } else {
+                keyid = "@AirKeyM.OFF";
+
+            }
+            var formParam = {
+                gatewayid: gatewayid, hotelid: hotelid, contollerid: contollerid,
+                type: 1, keyid: keyid, param: param, nickname: '@Model.nickname', str_RoomNo: '@Model.str_RoomNo',
+                Ing_CustID: '@Model.Ing_CustID', str_CustName: '@Model.str_CustName', str_OpenID: '@Model.str_OpenID', Ing_MasterID: '@Model.Ing_MasterID'
+            };
+            console.log(formParam);
+            $.ajax({
+                type: 'post',
+                url: '/Smart/ControlDevice',// 跳转到 action
+                data: formParam,
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    console.log(param);
+                    console.log(data);
+                    if (data.result == "2003") {
+                        param = data.info.param;
+                        if (powercount == 0) {
+                            powercount = 1;
+                            getStatus(gatewayid, contollerid, hotelid, param);
+                        } else {
+                            powercount = 0;
+                            $("#temp_num").html("--°C");
+                            $("#fan_speed").html("风速");
+                        }
+
+
+
+                    } else {
+                        //Dialog("", data.msg, 1, "");
+                        Toast(data.msg, 3000);
+                    }
+                },
+                error: function () {
+                    //Dialog("", "异常！", 1, "");
+                    Toast("异常！", 3000);
+                }
+            });
+        }
+        function dy_up() {
+            var img = document.getElementById("key_dy");
+            img.src = "../../Images/klair/关闭.png";
+        }
+        function zl_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_zl");
+            img.src = "../../Images/klair/制冷-c.png";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, param);
+        }
+        function zl_up() {
+            var img = document.getElementById("key_zl");
+            img.src = "../../Images/klair/制冷.png";
+        }
+        function zd_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_zd");
+            img.src = "../../Images/klair/AUTO-c.png";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, param);
+        }
+        function zd_up() {
+            var img = document.getElementById("key_zd");
+            img.src = "../../Images/klair/AUTO.png";
+        }
+        function zr_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_zr");
+            img.src = "../../Images/klair/制热-c.png";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, param);
+        }
+        function zr_up() {
+            var img = document.getElementById("key_zr");
+            img.src = "../../Images/klair/制热.png";
+        }
+        function cs_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_cs");
+            img.src = "../../Images/klair/除湿-c.png";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, param);
+        }
+        function cs_up() {
+            var img = document.getElementById("key_cs");
+            img.src = "../../Images/klair/除湿.png";
+        }
+        function cf_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_cf");
+            img.src = "../../Images/klair/吹风-c.png";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, param);
+        }
+        function cf_up() {
+            var img = document.getElementById("key_cf");
+            img.src = "../../Images/klair/吹风.png";
+        }
+        function wdj_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_wdj");
+            img.src = "../../Images/klair/wdj-c.png";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, param);
+        }
+        function wdj_up() {
+            var img = document.getElementById("key_wdj");
+            img.src = "../../Images/klair/wdj.png";
+        }
+        function wdf_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_wdf");
+            img.src = "../../Images/klair/温度--c.png";
+            controlDevice(gatewayid, contollerid, hotelid, keyid, param);
+        }
+        function wdf_up() {
+            var img = document.getElementById("key_wdf");
+            img.src = "../../Images/klair/温度-.png";
+        }
+        function fs_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_fs");
+            img.src = "../../Images/klair/风速-c.png";
+            if (fanMode == 0) {//自动风速
+
+            } else if (fanMode == 1) {//低风速
+                keyid = "@AirKeyM.FAN_LOW";
+            } else if (fanMode == 2) {//中
+                keyid = "@AirKeyM.FAN_MID";
+            } else if (fanMode == 3) {//高
+                keyid = "@AirKeyM.FAN_HI";
+            } else {
+
+            }
+            var formParam = {
+                gatewayid: gatewayid, hotelid: hotelid, contollerid: contollerid,
+                type: 1, keyid: keyid, param: param, nickname: '@Model.nickname', str_RoomNo: '@Model.str_RoomNo',
+                Ing_CustID: '@Model.Ing_CustID', str_CustName: '@Model.str_CustName', str_OpenID: '@Model.str_OpenID', Ing_MasterID: '@Model.Ing_MasterID'
+            };
+            console.log(formParam);
+            $.ajax({
+                type: 'post',
+                url: '/Smart/ControlDevice',// 跳转到 action
+                data: formParam,
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    console.log(param);
+                    console.log(data);
+                    if (data.result == "2003") {
+                        if (fanMode == 0) {//自动风速
+                            fanMode = 1;
+                        } else if (fanMode == 1) {//低风速
+                            fanMode = 2;
+                        } else if (fanMode == 2) {//中
+                            fanMode = 3;
+                        } else if (fanMode == 3) {//高
+                            fanMode = 0;
+                        } else {
+
+                        }
+                        param = data.info.param;
+                        getStatus(gatewayid, contollerid, hotelid, param);
+                    } else {
+                        //Dialog("", data.msg, 1, "");
+                        Toast(data.msg, 3000);
+                    }
+                },
+                error: function () {
+                    //Dialog("", "异常！", 1, "");
+                    Toast("异常！", 3000);
+                }
+            });
+        }
+        function fs_up() {
+            var img = document.getElementById("key_fs");
+            img.src = "../../Images/klair/风速.png";
+        }
+        function cft_down(gatewayid, contollerid, hotelid, keyid) {
+            var img = document.getElementById("key_cft");
+            img.src = "../../Images/klair/扫风-c.png";
+            // controlDevice(gatewayid, contollerid, hotelid, keyid, param);
+            if (swingMode == 0) {
+
+            } else {
+                keyid = "@AirKeyM.SW_OFF";
+            }
+            var formParam = {
+                gatewayid: gatewayid, hotelid: hotelid, contollerid: contollerid,
+                type: 1, keyid: keyid, param: param, nickname: '@Model.nickname', str_RoomNo: '@Model.str_RoomNo',
+                Ing_CustID: '@Model.Ing_CustID', str_CustName: '@Model.str_CustName', str_OpenID: '@Model.str_OpenID', Ing_MasterID: '@Model.Ing_MasterID'
+            };
+            console.log(formParam);
+            $.ajax({
+                type: 'post',
+                url: '/Smart/ControlDevice',// 跳转到 action
+                data: formParam,
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    console.log(param);
+                    console.log(data);
+                    if (data.result == "2003") {
+                        if (swingMode == 0) {
+                            swingMode = 1;
+                        } else {
+                            swingMode = 0;
+                        }
+                        param = data.info.param;
+                        getStatus(gatewayid, contollerid, hotelid, param);
+                    } else {
+                        //Dialog("", data.msg, 1, "");
+                        Toast(data.msg, 3000);
+                    }
+                },
+                error: function () {
+                    //Dialog("", "异常！", 1, "");
+                    Toast("异常！", 3000);
+                }
+            });
+
+        }
+        function cft_up() {
+            var img = document.getElementById("key_cft");
+            img.src = "../../Images/klair/扫风.png";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E563F2C1-E77B-417F-BBA8-3F0931F72D5C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BLL</RootNamespace>
+    <AssemblyName>BLL</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Bee.Web.Biz">
+      <HintPath>..\lib\Bee.Web.Biz.dll</HintPath>
+    </Reference>
+    <Reference Include="Bee.Web.Data">
+      <HintPath>..\lib\Bee.Web.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ConvertResponseB.cs" />
+    <Compile Include="Cust\CustB.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reservation\AwardB.cs" />
+    <Compile Include="Reservation\AwardGoodsB.cs" />
+    <Compile Include="Reservation\ContinueInterB.cs" />
+    <Compile Include="Reservation\MasterB.cs" />
+    <Compile Include="Reservation\WxPayResultB.cs" />
+    <Compile Include="RoomCenter\RoomNumB.cs" />
+    <Compile Include="RoomCenter\RoomTypeB.cs" />
+    <Compile Include="SmartControl\SmartControlB.cs" />
+    <Compile Include="StoreInfo\StoreInfoB.cs" />
+    <Compile Include="System\FirstCheckConfigB.cs" />
+    <Compile Include="System\NearB.cs" />
+    <Compile Include="System\ShareRecordB.cs" />
+    <Compile Include="System\SMS\SMSSendB.cs" />
+    <Compile Include="System\SMS\WeChatB.cs" />
+    <Compile Include="System\SMS\WechatHisB.cs" />
+    <Compile Include="System\TimeRoomRuleB.cs" />
+    <Compile Include="System\UsersGrpB.cs" />
+    <Compile Include="System\WechatPositionB.cs" />
+    <Compile Include="System\WxChargeMonB.cs" />
+    <Compile Include="VipInfo\CouponDetailsB.cs" />
+    <Compile Include="VipInfo\CouponLogB.cs" />
+    <Compile Include="VipInfo\CouponTypeB.cs" />
+    <Compile Include="VipInfo\VipCardChargeIntegralB.cs" />
+    <Compile Include="VipInfo\VipCardChargeMonB.cs" />
+    <Compile Include="VipInfo\VipCardChargeMonRuleB.cs" />
+    <Compile Include="VipInfo\VipCardChargeTypeB.cs" />
+    <Compile Include="VipInfo\VipCardInfoB.cs" />
+    <Compile Include="VipInfo\VipCardTypeB.cs" />
+    <Compile Include="VipInfo\VipInfoB.cs" />
+    <Compile Include="VipInfo\VipPackageB.cs" />
+    <Compile Include="VipInfo\WechatActivityLogB.cs" />
+    <Compile Include="VipInfo\WechatWalletB.cs" />
+    <Compile Include="Wechat\ComDetailB.cs" />
+    <Compile Include="Wechat\CommentsB.cs" />
+    <Compile Include="Wechat\NewsB.cs" />
+    <Compile Include="Wechat\StoreDetailInfoB.cs" />
+    <Compile Include="Wechat\StoreImgB.cs" />
+    <Compile Include="Wechat\StoreSumB.cs" />
+    <Compile Include="Wechat\UserCommentsB.cs" />
+    <Compile Include="Wechat\WeChatConfigB.cs" />
+    <Compile Include="Wechat\WechatStoreInfoB.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\DAL\DAL.csproj">
+      <Project>{255bf7a5-220c-407b-9b19-ed262484add7}</Project>
+      <Name>DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{44cd22e5-d77e-4d29-bb54-3a99137d6ca7}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Public\Public.csproj">
+      <Project>{44fcffea-7291-4ced-b35a-1e659ea78546}</Project>
+      <Name>Public</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

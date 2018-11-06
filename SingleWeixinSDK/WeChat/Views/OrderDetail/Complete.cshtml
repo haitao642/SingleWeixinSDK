@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = "View";
+}
+@model Model.MasterM
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+    <title>订单详情</title>
+
+    <link rel="stylesheet" href="/Content/amazeui.min.css">
+    <link rel="stylesheet" href="/Content/app.css">
+    <link rel="stylesheet" href="~/Content/public.css">
+    <link href="/Content/bootstrap.min.css" rel="stylesheet">
+    <!--[if (gte IE 9)|!(IE)]><!-->
+    <script src="/Scripts/jquery-1.10.2.min.js"></script>
+    <!--<![endif]-->
+    <!--[if lte IE 8 ]>
+    <script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+    <script src="assets/js/amazeui.ie8polyfill.min.js"></script>
+    <![endif]-->
+    <script src="/Scripts/amazeui.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+</head>
+<body>
+    @*<div data-am-sticky>
+            <div class="am-u-sm-12 am-vertical-align" style="height:55px;text-align:center;background-color:rgba(51,51,51,0.2);">
+                <text class="am-vertical-align-middle" style="">东方巴黎酒店</text>
+            </div>
+        </div>*@
+    @*<div data-am-sticky>
+        <div class="header">
+            <div class="am-u-sm-2 am-vertical-align" style="height:55px;text-align:center;">
+                <img class="img_back am-vertical-align-middle" src="~/Images/back.png" />
+                <text class="am-vertical-align-middle" style="font-size:16px;color:#ffffff;" onclick="">返回</text>
+            </div>
+            <div class="am-u-sm-8 am-vertical-align" style="height:55px;text-align:center;">
+                <text class="am-vertical-align-middle" style="font-size:16px;color:#ffffff;">订单详情</text>
+            </div>
+            <div class="am-u-sm-2" style="height:55px;">
+            </div>
+        </div>
+    </div>*@
+    <div class="am-g" style="padding:10px!important;font-weight:bold;">
+        <div class="am-u-sm-12" style="text-align:center;margin-top:30px!important;">
+            <span style="font-weight:bold;font-size:16px;color:#E1662D;">尊敬的微生活会员，欢迎使用微信订房！</span>
+        </div>
+        <div class="am-u-sm-12" style="text-align:center;margin-top:20px!important;">
+            <span style="font-weight:bold;font-size:18px;">您已预订成功<br /><span style="font-size:12px;color:#808080;font-weight:normal;">请留意预订确认信息</span></span>
+        </div>
+        <div class="am-u-sm-12" style="text-align:center;margin-top:20px!important;font-size:12px;color:#808080;">
+            <span>房间将保留至入住日18:00，若不能及时到点，请提前与酒店联系。</span>
+        </div>
+        <div class="am-u-sm-12" style="height:1px;border-top:1px solid #d5d5d5;margin-top:10px!important;">
+        </div>
+        <div class="am-u-sm-12" style="height:40px;">
+
+            <text class="" style="vertical-align:middle;line-height:40px;color:#E1662D;">订单号:</text>
+            <text class="" style="float:right;vertical-align:middle;line-height:40px;">@Model.str_Pk_Accnt</text>
+        </div>
+        <div class="am-u-sm-12 " style="height:1px;border-top:1px solid #d5d5d5;">
+        </div>
+        <div class="am-u-sm-12" style="height:40px;">
+            <text class="" style="vertical-align:middle;line-height:40px;color:#E1662D;">姓名:</text>
+            <text class="" style="float:right;vertical-align:middle;line-height:40px;">@Model.str_cusname</text>
+        </div>
+        <div class="am-u-sm-12" style="height:1px;border-top:1px solid #d5d5d5;">
+        </div>
+        <div class="am-u-sm-12" style="height:40px;">
+            <text class="" style="vertical-align:middle;line-height:40px;color:#E1662D;">手机:</text>
+            <text class="" style="float:right;vertical-align:middle;line-height:40px;">@Model.str_mobile</text>
+        </div>
+        <div class="am-u-sm-12" style="height:1px;border-top:1px solid #d5d5d5;">
+        </div>
+        <div class="am-u-sm-12" style="height:40px;">
+            <text class="" style="vertical-align:middle;line-height:40px;color:#E1662D;">来期:</text>
+            <text class="" style="float:right;vertical-align:middle;line-height:40px;">@Model.dt_ArrDate.Value.ToString("yyyy/MM/dd")</text>
+        </div>
+        <div class="am-u-sm-12" style="height:1px;border-top:1px solid #d5d5d5;">
+        </div>
+        <div class="am-u-sm-12" style="height:40px;">
+            <text class="" style="vertical-align:middle;line-height:40px;color:#E1662D;">离期:</text>
+            <text class="" style="float:right;vertical-align:middle;line-height:40px;">@Model.dt_DepDate.Value.ToString("yyyy/MM/dd")</text>
+        </div>
+        <div class="am-u-sm-12" style="height:1px;border-top:1px solid #d5d5d5;">
+        </div>
+    </div>
+</body>
+</html>
