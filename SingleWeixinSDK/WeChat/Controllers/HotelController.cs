@@ -310,7 +310,7 @@ namespace WeChat.Controllers
 
             ////酒店经纬度
 
-            LogHelper.LogInfo("酒店经纬度:" + m1.str_port_y + "," + m1.str_port_x);
+           // LogHelper.LogInfo("酒店经纬度:" + m1.str_port_y + "," + m1.str_port_x);
 
             if (string.IsNullOrEmpty(m1.str_port_y) || string.IsNullOrEmpty(m1.str_port_x))
             {
