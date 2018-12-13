@@ -37,9 +37,9 @@ namespace BLL
         /// <param name="Ing_StoreID"></param>
         /// <param name="dtarr"></param>
         /// <returns></returns>
-        public List<RoomType1M> GetUseFulList(int Ing_StoreID, DateTime dtarr)
+        public List<RoomType1M> GetUseFulList(int Ing_StoreID, DateTime dtarr, String RateID)
         {
-            return dal.GetUseFulList(Ing_StoreID, dtarr);
+            return dal.GetUseFulList(Ing_StoreID, dtarr, RateID);
         }
         /// <summary>
         /// 获取房型图片
@@ -50,6 +50,17 @@ namespace BLL
         public List<StoreImgM> GetRoomTypeImg(int Ing_StoreID, string strRoomTypeCode)
         {
             return dal.GetRoomTypeImg(Ing_StoreID,strRoomTypeCode);
+        }
+
+        /// <summary>
+        /// 获取房型图片
+        /// </summary>
+        /// <param name="Ing_StoreID"></param>
+        /// <param name="roomTypeId"></param>
+        /// <returns></returns>
+        public List<StoreImgM> GetRoomTypeImg(int Ing_StoreID, int roomTypeId)
+        {
+            return dal.GetRoomTypeImg(Ing_StoreID, roomTypeId);
         }
 
         /// <summary>

@@ -85,6 +85,14 @@ namespace DAL
             return this.GetQueryM<WxPayResultM>(strSql).FirstOrDefault();
         }
 
+        public List<WxPayResultM> GetMoelBypid(int Ing_pkid)
+        {
+            string strSql = "SELECT * FROM dbo.T_WxPayResult a WHERE a.Ing_type in(0,10) AND a.Ing_pkid={0} AND a.Ing_Sta=1";
+            strSql = string.Format(strSql, Ing_pkid);
+
+            return this.GetQueryM<WxPayResultM>(strSql);
+        }
+
         /// <summary>
         /// 根据out_trade_no查找记录
         /// </summary>

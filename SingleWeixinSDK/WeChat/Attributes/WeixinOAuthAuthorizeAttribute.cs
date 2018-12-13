@@ -1,4 +1,5 @@
-﻿using Model.WeiXin;
+﻿using Model;
+using Model.WeiXin;
 using Public;
 using System;
 using System.Collections.Generic;
@@ -57,16 +58,18 @@ namespace WeChat.Attributes
             target_uri += "/" + storeid;
             var userAgent = filterContext.RequestContext.HttpContext.Request.UserAgent;
             var redirect_uri = string.Format("{0}/OAuth/Callback", domain);//这里需要完整url地址，对应Controller里面的OAuthController的Callback
+            BLL.StoreInfoB bll1 = new BLL.StoreInfoB();
+            StoreM m1 = bll1.GetStore(storeid);
             BLL.Wechat.WeChatConfigB wccb = new BLL.Wechat.WeChatConfigB();
-            WeChatConfigM we = wccb.GetWeixinConfig(storeid);
-            var scope = we.OauthScope;
+            Model.WeChatConfigM we = wccb.GetWeixinConfigForOta(m1.str_LockStoreNo);
+            var scope = "snsapi_userinfo";
             // var state = DateTime.Now.ToString("yyyyMMddHHmmss") + (new Random().Next(100, 999)).ToString();//state保证唯一即可,可以用其他方式生成
 
             //这里为了实现简单，将state和target_uri保存在Cache中，并设置过期时间为2分钟。您可以采用其他方法!!!
             // HttpRuntime.Cache.Insert(state, target_uri, null,DateTime.Now.AddMinutes(3), TimeSpan.Zero, CacheItemPriority.Normal, null);
             var weixinOAuth2Url = string.Format(
                      "https://open.weixin.qq.com/connect/oauth2/authorize?appid={0}&redirect_uri={1}&response_type=code&scope={2}&state={3}#wechat_redirect",
-                      we.AppID, redirect_uri, scope, target_uri);
+                      we.str_AppID, redirect_uri, scope, target_uri);
             LogWriter.Default.WriteInfo(string.Format("小程序获取客户微信资料,{0},缓存key:{1},缓存value:{2},缓存域id:{3}", weixinOAuth2Url, "", target_uri, HttpRuntime.AppDomainId));
             filterContext.Result = new RedirectResult(weixinOAuth2Url);
         }

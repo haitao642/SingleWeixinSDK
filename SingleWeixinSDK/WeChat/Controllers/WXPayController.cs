@@ -52,14 +52,26 @@ namespace WeChat.Controllers
                 return Json(result);
             }
             int storeid = Convert.ToInt32(sPara["storeid"]);
+            ///门店信息
+            BLL.StoreInfoB bll1 = new BLL.StoreInfoB();
+            StoreM m1 = bll1.GetStore(storeid);
+            if (m1 == null)
+            {
+                var result = new
+                {
+                    return_code = "Fail",
+                    return_msg = "酒店信息不存在",
+                };
+                return Json(result);
+            }
             BLL.Wechat.WeChatConfigB bllconfig = new WeChatConfigB();
-            WeChatConfigM wechatconfig = bllconfig.GetWeixinConfig(storeid);
+            Model.WeChatConfigM wechatconfig = bllconfig.GetWeixinConfigForOta(m1.str_LockStoreNo);
             Boolean openJSSDK = false;
-            if (wechatconfig.OpenJSSDK == 1)
+            if (wechatconfig.Ing_OpenJSSDK == 1)
             {
                 openJSSDK = true;
             }
-            TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.AppID, wechatconfig.AppSecret, openJSSDK);
+            TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.str_AppID, wechatconfig.str_AppSecret, openJSSDK);
             var token = tokenHelper.GetToken();
             var out_trade_no = Guid.NewGuid().ToString().Replace("-", "");
             var domain = System.Configuration.ConfigurationManager.AppSettings["Domain"];
@@ -69,7 +81,7 @@ namespace WeChat.Controllers
             var fee_type = "CNY";
             var total_fee = int.Parse(sPara["total_fee"]);
             var trade_type = sPara["trade_type"];
-            var spbill_create_ip = (trade_type == "APP" || trade_type == "NATIVE") ? Request.UserHostName : wechatconfig.spbill_create_ip;
+            var spbill_create_ip = (trade_type == "APP" || trade_type == "NATIVE") ? Request.UserHostName : wechatconfig.str_spbill_create_ip;
             var time_start = DateTime.Now.ToString("yyyyMMddHHmmss");
             var time_expire = DateTime.Now.AddHours(1).ToString("yyyyMMddHHmmss");//默认1个小时订单过期，开发者可自定义其他超时机制，原则上微信订单超时时间不超过2小时
             var goods_tag = sPara["goods_tag"];
@@ -81,7 +93,7 @@ namespace WeChat.Controllers
             var dec_ChargeMon = sPara["dec_ChargeMon"];
             var dec_Wechat = sPara["dec_Wechat"];
             var coupondetailid = sPara["coupondetailid"];
-            var partnerKey = wechatconfig.PartnerKey;
+            var partnerKey = wechatconfig.str_PartnerKey;
             ///判断是否已经支付过了
             int Ing_type = 0;
             int Ing_pkid = 0;
@@ -155,13 +167,14 @@ namespace WeChat.Controllers
 
 
             var content = WxPayAPI.UnifiedOrder(
-                          wechatconfig.AppID, wechatconfig.mch_id, wechatconfig.device_info, nonceStr,
+                          wechatconfig.str_AppID, wechatconfig.str_mch_id, wechatconfig.str_device_info, nonceStr,
                           body, detail, attach, out_trade_no, fee_type, total_fee, spbill_create_ip, time_start, time_expire,
                           goods_tag, notify_url, trade_type, product_id, openid, partnerKey);
 
+            Public.LogHelper.LogInfo("微信服务下预定单内容：" + body.ToString());
             if (content.return_code.Value == "SUCCESS" && content.result_code.Value == "SUCCESS")
             {
-                string paysign = WxPayAPI.PaySign(wechatconfig.AppID, timeStamp, nonceStr, content.prepay_id.Value, "MD5", partnerKey);
+                string paysign = WxPayAPI.PaySign(wechatconfig.str_AppID, timeStamp, nonceStr, content.prepay_id.Value, "MD5", partnerKey);
                 var result = new
                 {
                     prepay_id = content.prepay_id.Value,

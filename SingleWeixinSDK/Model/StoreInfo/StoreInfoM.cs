@@ -452,7 +452,14 @@ namespace Model
         /// </summary>
         public int Ing_AfterAuditChangeRank { get; set; }
 
-        
+
+        /// <summary>
+        /// ota√≈µÍ∫≈
+        /// </summary>
+        public string str_LockStoreNo { get; set; }
+
+
+
     }
 
 

@@ -114,5 +114,10 @@ namespace Model.WeiXin
         /// </summary>
         [XmlAttribute(AttributeName = "HourEnd")]
         public int HourEnd { get; set; }
+        /// <summary>
+        /// 酒店介绍地址
+        /// </summary>
+        [XmlAttribute(AttributeName = "StoreUrl")]
+        public string StoreUrl { get; set; }
     }
 }

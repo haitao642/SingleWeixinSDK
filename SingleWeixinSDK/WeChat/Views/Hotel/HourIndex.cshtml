@@ -50,6 +50,8 @@
             Dialog("温馨提醒", '@Model.message', 1);
         </script>
     }
+    else
+    {
     <div class="am-g" style="padding:10px!important;">
         <div class="am-u-sm-2" style="height:100px;">
             <img src="~/Images/calender.png" style="height:30px;width:30px;float:right;margin-top:35px;margin-right:10px;" />
@@ -127,7 +129,13 @@
                             <span class="am-vertical-align-middle" style="margin-left:15px;color:#A6A6A7;font-size:15px;">备注</span>
                             <span class="am-vertical-align-middle" style="margin-left:25px;font-size:13px;">@m.str_Remark</span>
                         </div>
-                        <div class="am-u-sm-9" style="height:50px;">
+                        <div class="am-u-sm-6" style="height:50px;">
+                        </div>
+                        <div class="am-u-sm-3" style="height:50px;text-align:center;">
+                            @if (!String.IsNullOrEmpty(m.str_PanoramaUrl))
+                            {
+                                <button type="button" class="am-btn" style="border-radius:4px;background:#E1662D;color:#fff;" onclick="panoramaUrl(@Model.storeDetailM.Ing_StoreID,@m.Ing_Pk_RoomTypeID)">全景看房</button>
+                            }
                         </div>
                         <div class="am-u-sm-3" style="height:50px;text-align:center;">
                             @if (m.CanUseRoom > 0)
@@ -149,6 +157,7 @@
         <div class="am-u-sm-12 " style="height:1px;border-top:1px solid #d5d5d5;">
         </div>
     </div>
+    }
     @*<div class="am-u-sm-2" style="height:60px;position:fixed;
         bottom:10px;right:10px;">*@
     @*<div class="am-u-sm-10" style="height:60px;">
@@ -178,7 +187,7 @@
             document.addEventListener("touchstart",defaultEvent,false);
             document.addEventListener("touchend",defaultEvent,false);
         },false)
- 
+
         block.addEventListener("touchmove", function(e) {
             var touches = e.touches[0];
             var oLeft = touches.clientX - oW;
@@ -191,7 +200,7 @@
             block.style.left = oLeft + "px";
             block.style.top = oTop + "px";
         },false);
-   
+
         block.addEventListener("touchend",function() {
             document.removeEventListener("touchmove",defaultEvent,false);
             document.removeEventListener("onmousewheel",defaultEvent,false);
@@ -201,68 +210,7 @@
         function defaultEvent(e) {
             e.preventDefault();
         }
-        ////////////日期
-        //var nowTemp = new Date();
-        //var nowDay = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0).valueOf();
-        //var nowMoth = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), 1, 0, 0, 0, 0).valueOf();
-        //var nowYear = new Date(nowTemp.getFullYear(), 0, 1, 0, 0, 0, 0).valueOf();
-        //var $dateStart = $('#date-start');
 
-        //var checkin = $dateStart.datepicker({
-        //    onRender: function (date, viewMode) {
-        //        // 默认 days 视图，与当前日期比较
-        //        var viewDate = nowDay;
-
-        //        switch (viewMode) {
-        //            // moths 视图，与当前月份比较
-        //            case 1:
-        //                viewDate = nowMoth;
-        //                break;
-        //                // years 视图，与当前年份比较
-        //            case 2:
-        //                viewDate = nowYear;
-        //                break;
-        //        }
-
-        //        return date.valueOf() < viewDate ? 'am-disabled' : '';
-        //    }
-        //}).on('changeDate.datepicker.amui', function (ev) {
-        //    if (ev.date.valueOf() >= checkout.date.valueOf()) {
-        //        var newDate = new Date(ev.date)
-        //        newDate.setDate(newDate.getDate() + 1);
-        //        checkout.setValue(newDate);
-        //    }
-        //    checkin.close();
-        //    $('#date-end')[0].focus();
-        //    updateInfo();
-        //}).data('amui.datepicker');
-
-        //var checkout = $('#date-end').datepicker({
-        //    onRender: function (date, viewMode) {
-        //        var inTime = checkin.date;
-        //        var inDay = inTime.valueOf();
-        //        var inMoth = new Date(inTime.getFullYear(), inTime.getMonth(), 1, 0, 0, 0, 0).valueOf();
-        //        var inYear = new Date(inTime.getFullYear(), 0, 1, 0, 0, 0, 0).valueOf();
-
-        //        // 默认 days 视图，与当前日期比较
-        //        var viewDate = inDay;
-
-        //        switch (viewMode) {
-        //            // moths 视图，与当前月份比较
-        //            case 1:
-        //                viewDate = inMoth;
-        //                break;
-        //                // years 视图，与当前年份比较
-        //            case 2:
-        //                viewDate = inYear;
-        //                break;
-        //        }
-        //        return date.valueOf() <= viewDate ? 'am-disabled' : '';
-        //    }
-        //}).on('changeDate.datepicker.amui', function (ev) {
-        //    checkout.close();
-        //    updateInfo();
-        //}).data('amui.datepicker');
         function goHotelDetail(){
             location.href = "/Hotel/HotelDetail?storeid="+@Model.storeDetailM.Ing_StoreID;
         }
@@ -274,6 +222,13 @@
             var strarr='@Model.searchM.dtArr.ToString("yyyy-MM-dd")';
             location.href = "/Hotel/HourIndex?storeid="+@Model.storeDetailM.Ing_StoreID+"&strarr="+strarr+"&strtime="+strtime;
         }
+        function panoramaUrl(storeid,roomtypeid){
+            var strarr='@Model.searchM.dtArr.ToString("yyyy-MM-dd")';
+            var strtime=@Model.strtime;
+            var url = "/Hotel/Panorama?storeid=" + storeid + "&strarr=" + strarr + "&strtime=" + strtime+"&roomtypeid="+roomtypeid+"&HourID=1";//"&Front6Hour=" + Front6Hour
+            window.location.href = url;
+        }
+
         function writeHourOrder(storeid,roomtypeid)
         {
             //var loadsue = layer.open({
@@ -285,49 +240,51 @@
             //var Front6Hour= $("#hidaddonenight").val();
 
             var url = "/Hotel/WriteHourOrder?storeid=" + storeid + "&strarr=" + strarr + "&strtime=" + strtime+"&roomtypeid="+roomtypeid;//"&Front6Hour=" + Front6Hour
-            
+
             window.location.href = url;
         }
         /////默认展开第一页
         $(function(){
 
-            //要初始化的东西
-            var list=@Model.listroomtype.Count;
-            if(list>0){
-                var id=@Model.listroomtype[0].display_order;
-                var icon=@Model.listroomtype[0].display_orderIcon;
-                $(id).attr('class','am-panel-collapse am-collapse am-in');
-                $(icon).attr("class","am-icon-angle-down");
-            }
+                //要初始化的东西
+                var list=@Model.listroomtype.Count;
+                if(list>0){
+                    var id=@Model.listroomtype[0].display_order;
+                    var icon=@Model.listroomtype[0].display_orderIcon;
+                    $(id).attr('class','am-panel-collapse am-collapse am-in');
+                    $(icon).attr("class","am-icon-angle-down");
+                }
 
         });
         var index=0;
         window.onload=function(){
-            var count=@Model.listroomtype.Count;
-            var $selected = $('#instrtime');
-            for(var i=1;i<=count;i++){
-                var displayid="roomtype_"+i;
-                var displayicon="roomIcon_"+i;
-                displayShow(displayid,displayicon);
-            }
-            var starttime=@Model.HourStart/100;
-            var endtime=@Model.HourEnd/100;
-            var strtime=@Model.searchM.dtArr.Hour;
-            var myDate = new Date();
-            var nowHour=myDate.getHours();
-            for(var i=nowHour+1;i<=endtime;i++){
-                if(i==strtime){
-                    $selected.append('<option value="' + i +'" selected>' + i+ ':00</option>');
-                }else{
-                    $selected.append('<option value="' + i +'">' + i+ ':00</option>');
+
+                var count=@Model.listroomtype.Count;
+                var $selected = $('#instrtime');
+                for(var i=1;i<=count;i++){
+                    var displayid="roomtype_"+i;
+                    var displayicon="roomIcon_"+i;
+                    displayShow(displayid,displayicon);
                 }
-            }
-            $selected.on('change', function() {
-                index++;
-                if(index>1){
-                    updateInfo($(this).find('option').eq(this.selectedIndex).val());
+                var starttime=@Model.HourStart/100;
+                var endtime=@Model.HourEnd/100;
+                var strtime=@Model.searchM.dtArr.Hour;
+                var myDate = new Date();
+                var nowHour=myDate.getHours();
+                for(var i=nowHour+1;i<=endtime;i++){
+                    if(i==strtime){
+                        $selected.append('<option value="' + i +'" selected>' + i+ ':00</option>');
+                    }else{
+                        $selected.append('<option value="' + i +'">' + i+ ':00</option>');
+                    }
                 }
-            });
+                $selected.on('change', function() {
+                    index++;
+                    if(index>1){
+                        updateInfo($(this).find('option').eq(this.selectedIndex).val());
+                    }
+                });
+
         }
         function displayShow(displayid,displayicon){
             $('#'+displayid).on('open.collapse.amui', function() {//open方法被调用时立即触发

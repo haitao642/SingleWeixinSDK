@@ -98,6 +98,11 @@ namespace BLL
             return dal.GetMoelBypid(Ing_type, Ing_pkid);
         }
 
+        public List<WxPayResultM> GetMoelBypid(int Ing_pkid)
+        {
+            return dal.GetMoelBypid(Ing_pkid);
+        }
+
 
         /// <summary>
         /// 支付成功后的操作

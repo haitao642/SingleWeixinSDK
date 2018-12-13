@@ -1,7 +1,10 @@
-﻿using BLL.Wechat;
+﻿using BLL;
+using BLL.System;
+using BLL.Wechat;
 using Deepleo.Weixin.SDK;
 using Deepleo.Weixin.SDK.Helpers;
 using Deepleo.Weixin.SDK.JSSDK;
+using Deepleo.Weixin.SDK.Pay;
 using Model;
 using Model.Cust;
 using Model.WeiXin;
@@ -28,7 +31,7 @@ namespace WeChat.Controllers
             int.TryParse(Request.QueryString["storeid"], out storeid);
             string redirect_url = "/WeChatLogin/index?storeid=" + storeid;
             string openid = AuthorizationManager.GetOpenID;
-            LogHelper.LogInfo("openid:"+openid);
+            LogHelper.LogInfo("openid:" + openid);
             MyAccountM model = new MyAccountM();
             BLL.StoreInfoB storeinfo1B = new BLL.StoreInfoB();
             StoreInfoM infoM = new StoreInfoM();
@@ -47,7 +50,32 @@ namespace WeChat.Controllers
                 ///跳到绑定界面
                 return new RedirectResult(redirect_url);
             }
-            
+
+            SysParaB parab = new SysParaB();
+            SysParaM param = parab.GetRecord("WcVip0");
+            if (param != null && !String.IsNullOrEmpty(param.str_ParaCode))
+            {
+                int cardTypeID = 0;
+                if (int.TryParse(param.str_ParaCode, out cardTypeID))
+                {
+                    if (cardTypeID == cardM.Ing_VipCardType)
+                    {
+                        model.cardType = 1;
+                    }
+                }
+            }
+            SysParaM param1 = parab.GetRecord("WcVip1");
+            if (param1 != null && !String.IsNullOrEmpty(param1.str_ParaCode))
+            {
+                int cardTypeID = 0;
+                if (int.TryParse(param1.str_ParaCode, out cardTypeID))
+                {
+                    if (cardTypeID == cardM.Ing_VipCardType)
+                    {
+                        model.cardType = 2;
+                    }
+                }
+            }
             model.openid = openid;
             model.storeid = storeid;
             model.VipCardId = cardM.Ing_Pk_VipCardId;
@@ -74,13 +102,13 @@ namespace WeChat.Controllers
             try
             {
                 BLL.Wechat.WeChatConfigB bllconfig = new WeChatConfigB();
-                WeChatConfigM wechatconfig = bllconfig.GetWeixinConfig(storeid);
+                Model.WeChatConfigM wechatconfig = bllconfig.GetWeixinConfigForOta(infoM.str_LockStoreNo);
                 Boolean openJSSDK = false;
-                if (wechatconfig.OpenJSSDK == 1)
+                if (wechatconfig.Ing_OpenJSSDK == 1)
                 {
                     openJSSDK = true;
                 }
-                TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.AppID, wechatconfig.AppSecret, openJSSDK);
+                TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.str_AppID, wechatconfig.str_AppSecret, openJSSDK);
                 var token = tokenHelper.GetToken(true);
                 Public.LogHelper.LogInfo("token:" + token + ",openid:" + openid);
 
@@ -123,7 +151,7 @@ namespace WeChat.Controllers
                 return new RedirectResult(redirect_url);
             }
             ViewBag.rawurl = "/MyAccount/Index?storeid=" + storeid;
-            
+
             model.openid = openid;
             model.storeid = storeid;
             //model.type = id;
@@ -197,7 +225,7 @@ namespace WeChat.Controllers
                 return new RedirectResult(redirect_url);
             }
             ViewBag.rawurl = "/MyAccount/Index?storeid=" + storeid;
-            
+
             model.vipcardid = cardM.Ing_Pk_VipCardId;
             return PartialView(model);
         }
@@ -227,7 +255,7 @@ namespace WeChat.Controllers
                 return new RedirectResult(redirect_url);
             }
             ViewBag.rawurl = "/MyAccount/Index?storeid=" + storeid;
-            
+
             model.vipcardid = cardM.Ing_Pk_VipCardId;
             return PartialView(model);
         }
@@ -256,7 +284,7 @@ namespace WeChat.Controllers
                 ///跳到绑定界面
                 return new RedirectResult(redirect_url);
             }
-            
+
             model.openid = openid;
             model.storeid = storeid;
             model.rawurl = "/MyAccount/Index?storeid=" + storeid;
@@ -282,13 +310,13 @@ namespace WeChat.Controllers
             try
             {
                 BLL.Wechat.WeChatConfigB bllconfig = new WeChatConfigB();
-                WeChatConfigM wechatconfig = bllconfig.GetWeixinConfig(storeid);
+                Model.WeChatConfigM wechatconfig = bllconfig.GetWeixinConfigForOta(infoM.str_LockStoreNo);
                 Boolean openJSSDK = false;
-                if (wechatconfig.OpenJSSDK == 1)
+                if (wechatconfig.Ing_OpenJSSDK == 1)
                 {
                     openJSSDK = true;
                 }
-                TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.AppID, wechatconfig.AppSecret, openJSSDK);
+                TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.str_AppID, wechatconfig.str_AppSecret, openJSSDK);
                 var token = tokenHelper.GetToken(true);
 
                 //TODO: 获取用户基本信息后，将用户信息存储在本地。
@@ -358,7 +386,7 @@ namespace WeChat.Controllers
                 return new RedirectResult(redirect_url);
             }
             ViewBag.rawurl = "/MyAccount/Index?storeid=" + storeid;
-            
+
             BLL.CouponDetailsB bll = new BLL.CouponDetailsB();
             model.list0 = bll.GetListbytype(cardM.Ing_Pk_VipCardId, 0);
             model.list1 = bll.GetListbytype(cardM.Ing_Pk_VipCardId, 1);
@@ -390,7 +418,7 @@ namespace WeChat.Controllers
                 ///跳到绑定界面
                 return new RedirectResult(redirect_url);
             }
-            
+
             model.cardM = cardM;
             model.rawurl = "/MyAccount/Index?storeid=" + storeid;
             BLL.VipCardChargeIntegralB inteB = new BLL.VipCardChargeIntegralB();
@@ -437,7 +465,7 @@ namespace WeChat.Controllers
         /// <param name="pwd"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult VirifyPwd(string pwd,int vipcardid)
+        public JsonResult VirifyPwd(string pwd, int vipcardid)
         {
             JsonResult json = new JsonResult();
             BLL.VipCardInfoB bll = new BLL.VipCardInfoB();
@@ -497,22 +525,65 @@ namespace WeChat.Controllers
         public JsonResult UpdateX(cancelOrderM model)
         {
             JsonResult json = new JsonResult();
-            
+
             BLL.MasterB masB = new BLL.MasterB();
             MasterM m = masB.GetOne(model.id);
+            BLL.StoreInfoB storeinfo1B = new BLL.StoreInfoB();
+            StoreInfoM infoM = new StoreInfoM();
+            infoM = storeinfo1B.GetOne(m.Ing_StoreID.Value);
             BLL.Wechat.WeChatConfigB bllconfig = new WeChatConfigB();
-            WeChatConfigM wechatconfig = bllconfig.GetWeixinConfig(m.Ing_StoreID.Value);
+            Model.WeChatConfigM wechatconfig = bllconfig.GetWeixinConfigForOta(infoM.str_LockStoreNo);
             Boolean openJSSDK = false;
-            if (wechatconfig.OpenJSSDK == 1)
+            if (wechatconfig.Ing_OpenJSSDK == 1)
             {
                 openJSSDK = true;
             }
-            TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.AppID, wechatconfig.AppSecret, openJSSDK);
+            TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.str_AppID, wechatconfig.str_AppSecret, openJSSDK);
             model.token = tokenHelper.GetToken();
-            BaseResponseModel mod = masB.UpdateX(model);
+            WxPayResultB wxB = new WxPayResultB();
+            List<WxPayResultM> list = wxB.GetMoelBypid(model.id);
+            if (list == null || list.Count == 0)
+            {
+                BaseResponseModel mod = masB.UpdateX(model);
+                json.Data = mod;
+            }
+            else
+            {
+                foreach (var wxM in list)
+                {
+                    if (wxM.Ing_Sta != 1)
+                    {
+                        continue;
+                    }
+                    var PartnerKey = wechatconfig.str_PartnerKey;
+                    var AppID = wechatconfig.str_AppID;
+                    var mch_id = wechatconfig.str_mch_id;
+                    var device_info = wechatconfig.str_device_info;
+                    var domain = System.Configuration.ConfigurationManager.AppSettings["Domain"];
+                    var nonceStr = Util.CreateNonce_str();
+                    var timestamp = Util.CreateTimestamp();
+                    var out_trade_no = Guid.NewGuid().ToString().Replace("-", "");
+                    int total = Convert.ToInt32(wxM.dec_fee * 100);
+                    try
+                    {
+                        string certpath = AppDomain.CurrentDomain.BaseDirectory + "/Cert/" + m.Ing_StoreID.Value+".p12";
+                        string certpwd = wechatconfig.str_CertPwd;
+                        string rev = WxPayAPI.Refund(AppID, mch_id, device_info, nonceStr, "", wxM.out_trade_no, out_trade_no, total, total, "CNY", "wechat", PartnerKey, domain + "/WXPay/Refund", certpath,certpwd);
+                        if (rev != null && (rev.Contains("<err_code_des><![CDATA[订单已全额退款]]></err_code_des>") ||
+                            rev.Contains("<err_code_des><![CDATA[累计退款金额大于支付金额]]></err_code_des>")))
+                        {
+                            model.type = 0;
+                            BaseResponseModel mod = masB.UpdateX(model);
+                            json.Data = mod;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Public.LogHelper.LogInfo("微信原路返回异常:" + ex.InnerException == null ? ex.Message : ex.InnerException.Message);
+                    }
 
-            json.Data = mod;
-
+                }
+            }
             return json;
         }
         /// <summary>
@@ -524,14 +595,17 @@ namespace WeChat.Controllers
         public JsonResult WXPay(ParaForCoponPayM model)
         {
             JsonResult json = new JsonResult();
+            BLL.StoreInfoB storeinfo1B = new BLL.StoreInfoB();
+            StoreInfoM infoM = new StoreInfoM();
+            infoM = storeinfo1B.GetOne(model.Ing_StoreID);
             BLL.Wechat.WeChatConfigB bllconfig = new WeChatConfigB();
-            WeChatConfigM wechatconfig = bllconfig.GetWeixinConfig(model.Ing_StoreID);
+            Model.WeChatConfigM wechatconfig = bllconfig.GetWeixinConfigForOta(infoM.str_LockStoreNo);
             Boolean openJSSDK = false;
-            if (wechatconfig.OpenJSSDK == 1)
+            if (wechatconfig.Ing_OpenJSSDK == 1)
             {
                 openJSSDK = true;
             }
-            TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.AppID, wechatconfig.AppSecret, openJSSDK);
+            TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.str_AppID, wechatconfig.str_AppSecret, openJSSDK);
             model.token = tokenHelper.GetToken();
             BLL.VipCardInfoB bll = new BLL.VipCardInfoB();
             BaseResponseModel rev = bll.WXPay(model);
@@ -568,21 +642,21 @@ namespace WeChat.Controllers
                 ///跳到绑定界面
                 return new RedirectResult(redirect_url);
             }
-            
+
 
             BLL.Wechat.WeChatConfigB bllconfig = new WeChatConfigB();
-            WeChatConfigM wechatconfig = bllconfig.GetWeixinConfig(storeid);
-            var appId = wechatconfig.AppID;
+            Model.WeChatConfigM wechatconfig = bllconfig.GetWeixinConfigForOta(infoM.str_LockStoreNo);
+            var appId = wechatconfig.str_AppID;
             var nonceStr = Util.CreateNonce_str();
             var timestamp = Util.CreateTimestamp();
             var domain = System.Configuration.ConfigurationManager.AppSettings["Domain"];
             var url1 = domain + Request.Url.PathAndQuery;
             Boolean openJSSDK = false;
-            if (wechatconfig.OpenJSSDK == 1)
+            if (wechatconfig.Ing_OpenJSSDK == 1)
             {
                 openJSSDK = true;
             }
-            TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.AppID, wechatconfig.AppSecret, openJSSDK);
+            TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.str_AppID, wechatconfig.str_AppSecret, openJSSDK);
             var jsTickect = tokenHelper.GetJSTickect(appId);
             var string1 = "";
             var signature = JSAPI.GetSignature(jsTickect, nonceStr, timestamp, url1, out string1);
@@ -697,6 +771,6 @@ namespace WeChat.Controllers
 
             return json;
         }
-       
+
     }
 }

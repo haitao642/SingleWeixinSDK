@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="AspNetPageD.cs" />
     <Compile Include="Cust\CustD.cs" />
+    <Compile Include="function\FunctionD.cs" />
     <Compile Include="Log\MasterLogD.cs" />
     <Compile Include="Log\SMSLogD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

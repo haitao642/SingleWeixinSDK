@@ -28,6 +28,8 @@
     <SMSURL></SMSURL>
     <HourStart>600</HourStart>
     <HourEnd>1800</HourEnd>
+    <StoreUrl></StoreUrl>
+  
   </WeChatConfigM>
   <WeChatConfigM>
     <ID>9</ID>
@@ -58,6 +60,7 @@
     <SMSURL></SMSURL>
     <HourStart>600</HourStart>
     <HourEnd>1800</HourEnd>
+    <StoreUrl></StoreUrl>
   </WeChatConfigM>
   <WeChatConfigM>
     <ID>180</ID>
@@ -76,5 +79,6 @@
     <SMSURL></SMSURL>
     <HourStart>600</HourStart>
     <HourEnd>1800</HourEnd>
+    <StoreUrl></StoreUrl>
   </WeChatConfigM>
 </WeiXinConfig>

@@ -89,6 +89,10 @@ namespace Model
         /// 会员卡id
         /// </summary>
         public int VipCardId { get; set; }
+        /// <summary>
+        /// 微信会员等级 0：其他会员 1：微信普通会员 2：微信尊享会员
+        /// </summary>
+        public int cardType { get; set; }
     }
 
 
@@ -238,6 +242,11 @@ namespace Model
         /// token
         /// </summary>
         public string token { get; set; }
+
+        /// <summary>
+        /// 0普通取消,1微信原路返回取消
+        /// </summary>
+        public int type { get; set; }
     }
 
     /// <summary>

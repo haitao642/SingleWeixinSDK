@@ -71,6 +71,21 @@ namespace DAL
             return this.DeleteRecord(id);
         }
         #endregion
+        public VipCardTypeM GetVipCardType(int CardTypeID)
+        {
+            if (CardTypeID<=0)
+            {
+                return null;
+            }
+            string strSql = "SELECT * FROM T_VipCard_Type a WITH (NOLOCK) WHERE a.Ing_Halt=1 AND a.Ing_CardTypeID=@CardTypeID";
 
+            this.Sqlca.AddParameter("@CardTypeID", CardTypeID);
+
+            VipCardTypeM model = this.GetQueryM<VipCardTypeM>(strSql).FirstOrDefault();
+            if (model == null) { }
+            this.Sqlca.ClearParameter();
+
+            return model;
+        }
     }
 }

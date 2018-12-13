@@ -72,11 +72,15 @@
             { 
                 <div class="am-g am-panel">
                     <div class="am-u-sm-12" style="height:60px;" data-am-collapse="{parent: '#accordion', target: '#@m.display_order'}">
-                        <div class="am-u-sm-10  am-vertical-align" style="height:60px;">
-                            <span class="am-vertical-align-middle" style="margin-left:10px;font-weight:bold;">@m.strRoomTypeName</span>
+                        <div class="am-u-sm-6  am-vertical-align" style="height:60px;">
+                            <span class="am-vertical-align-middle" style="margin-left:10px;font-weight:bold;">@m.strRoomTypeName
+                            @if (m.deleteprice > 0)
+                            {
+                                <span style="color:#FFF;border-radius:40px;background-color:#E1662D;margin-left:10px;font-size:12px;padding:2px 2px 2px 2px;">立减<span>@m.deleteprice.ToString("F0")</span>元</span>
+                            }</span>
                         </div>
-                        <div class="am-u-sm-2" style="height:60px;">
-                            <span class="" style="color:#E1662D;float:right;line-height:60px;align-items:center;">&yen; @m.price0.ToString("F0")<span id="@m.display_orderIcon" class="am-icon-angle-right" style="color:#000;margin-left:5px;"></span></span>
+                        <div class="am-u-sm-6" style="height:60px;">
+                            <span class="" style="color:#E1662D;float:right;line-height:60px;align-items:center;"><s style="color:#000;">&yen; @m.price0.ToString("F0")</s> &yen; @m.price1.ToString("F0")<span id="@m.display_orderIcon" class="am-icon-angle-right" style="color:#000;margin-left:5px;"></span></span>
                         </div>
                     </div>
 
@@ -168,19 +172,26 @@
                             <span class="am-vertical-align-middle" style="margin-left:15px;color:#A6A6A7;font-size:15px;">备注</span>
                             <span class="am-vertical-align-middle" style="margin-left:25px;font-size:13px;">@m.str_Remark</span>
                         </div>
-                        <div class="am-u-sm-9" style="height:50px;">
+                        <div class="am-u-sm-6" style="height:50px;">
                         </div>
                         <div class="am-u-sm-3" style="height:50px;text-align:center;">
-                            @if (m.CanUseRoom > 0)
+                            @if (!String.IsNullOrEmpty(m.str_PanoramaUrl))
                             {
-                                <button type="button" class="am-btn" style="border-radius:4px;background:#E1662D;color:#fff;" onclick="writeorder(@Model.storeDetailM.Ing_StoreID,@m.Ing_Pk_RoomTypeID)">预订</button>
+                                <button type="button" class="am-btn" style="border-radius:4px;background:#E1662D;color:#fff;" onclick="panoramaUrl(@Model.storeDetailM.Ing_StoreID,@m.Ing_Pk_RoomTypeID)">全景看房</button>
                             }
-                            else
-                            {
-                                <button type="button" class="am-btn" style="border-radius:4px;background:#A6A6A7;color:#fff;">满房</button>
-                            }
+                            </div>
+                            <div class="am-u-sm-3" style="height:50px;text-align:center;">
+                               
+                                @if (m.CanUseRoom > 0)
+                                {
+                                    <button type="button" class="am-btn" style="border-radius:4px;background:#E1662D;color:#fff;" onclick="writeorder(@Model.storeDetailM.Ing_StoreID,@m.Ing_Pk_RoomTypeID)">预订</button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="am-btn" style="border-radius:4px;background:#A6A6A7;color:#fff;">满房</button>
+                                }
+                            </div>
                         </div>
-                    </div>
 
                 </div>
                 <div class="am-u-sm-12 " style="height:1px;border-top:1px solid #d5d5d5;">
@@ -328,6 +339,12 @@
             var strarr=document.getElementById("date-start").value;
             var strdep=document.getElementById("date-end").value;
             location.href = "/Hotel/Index?storeid="+@Model.storeDetailM.Ing_StoreID+"&strarr="+strarr+"&strdep="+strdep;
+        }
+        function panoramaUrl(storeid,roomtypeid){
+            var strarr=document.getElementById("date-start").value;
+            var strdep=document.getElementById("date-end").value;
+            var url = "/Hotel/Panorama?storeid=" + storeid + "&strarr=" + strarr + "&strdep=" + strdep+"&roomtypeid="+roomtypeid+"&HourID=0";//"&Front6Hour=" + Front6Hour
+            window.location.href = url;
         }
         function writeorder(storeid,roomtypeid)
         {

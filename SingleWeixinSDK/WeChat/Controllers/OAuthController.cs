@@ -1,4 +1,5 @@
 ﻿using Deepleo.Weixin.SDK;
+using Model;
 using Model.WeiXin;
 using Public;
 using System;
@@ -42,14 +43,16 @@ namespace WeChat.Controllers
             LogHelper.LogInfo("storeid:" + storeid);
             //var cache_status =HttpRuntime.Cache.Get(state);
             //var redirect_url = state;//cache_status == null ? "/" : cache_status.ToString();//没有获取到state,就跳转到首页
+            BLL.StoreInfoB bll1 = new BLL.StoreInfoB();
+            StoreM m1 = bll1.GetStore(storeid);
             BLL.Wechat.WeChatConfigB wccb = new BLL.Wechat.WeChatConfigB();
-            WeChatConfigM we = wccb.GetWeixinConfig(storeid);
-            var scope = we.OauthScope;
+            Model.WeChatConfigM we = wccb.GetWeixinConfigForOta(m1.str_LockStoreNo);
+            var scope = "snsapi_userinfo";
             var access_token_scope = "";
             double expires_in = 0;
             var access_token = "";
             var openId = "";
-            var token = OAuth2API.GetAccessToken(code, we.AppID, we.AppSecret);
+            var token = OAuth2API.GetAccessToken(code, we.str_AppID, we.str_AppSecret);
             string nickname = "";
             dynamic userinfo;
             try
@@ -57,7 +60,7 @@ namespace WeChat.Controllers
                 if (scope == "snsapi_userinfo")
                 {
                     LogHelper.LogInfo("snsapi_userinfo");
-                    var refreshAccess_token = OAuth2API.RefreshAccess_token(token.refresh_token, we.AppID);
+                    var refreshAccess_token = OAuth2API.RefreshAccess_token(token.refresh_token, we.str_AppID);
                     access_token = refreshAccess_token.access_token;//通过code换取的是一个特殊的网页授权access_token，与基础支持中的access_token（该access_token用于调用其他接口）不同。
                     openId = refreshAccess_token.openid;
                     LogHelper.LogInfo("openId:"+openId);

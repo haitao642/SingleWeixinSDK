@@ -11,7 +11,7 @@ namespace DAL
     public class SysParaD:BaseTable
     {
         public SysParaD()
-            : base("T_Sys_Para", "Ing_pk_PID")
+            : base("T_Sys_BusnPara", "Ing_pk_PID")
         { }
 
         #region Ìí¼Ó£¬É¾³ý£¬ÐÞ¸Ä
@@ -80,8 +80,15 @@ namespace DAL
         /// <returns></returns>
         public SysParaM GetRecord(string str_ParaType, string str_ParaCode)
         {
-            string strSql = "SELECT * from T_Sys_Para a WHERE a.str_ParaType='{0}' AND a.str_ParaCode='{1}'";
+            string strSql = "SELECT * from T_Sys_BusnPara a WHERE a.str_ParaType='{0}' AND a.str_ParaCode='{1}'";
             strSql = string.Format(strSql, str_ParaType, str_ParaCode);
+
+            return this.GetQueryM<SysParaM>(strSql).FirstOrDefault();
+        }
+        public SysParaM GetRecord(string str_ParaType)
+        {
+            string strSql = "SELECT * from T_Sys_BusnPara a WHERE a.str_ParaType='{0}'";
+            strSql = string.Format(strSql, str_ParaType);
 
             return this.GetQueryM<SysParaM>(strSql).FirstOrDefault();
         }

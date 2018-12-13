@@ -77,6 +77,14 @@ namespace BLL
         {
             return dal.GetStoreImg(Ing_StoreID);
         }
-         
+        /// <summary>
+        /// 获取单个门店的酒店信息图片
+        /// </summary>
+        /// <param name="Ing_StoreID"></param>
+        /// <returns></returns>
+        public List<StoreImgM> GetStoreOtaImg(int Ing_StoreID)
+        {
+            return dal.GetStoreOtaImg(Ing_StoreID);
+        }
     }
 }

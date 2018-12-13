@@ -272,6 +272,10 @@ namespace Model
         /// 钟点房到店时间
         /// </summary>
         public int strtime { get; set; }
+        /// <summary>
+        /// 酒店介绍地址
+        /// </summary>
+        public string StoreUrl { get; set; }
 
     }
 
@@ -361,6 +365,10 @@ namespace Model
         /// 普卡
         /// </summary>
         public decimal price4 { get; set; }
+        /// <summary>
+        /// 减免金额
+        /// </summary>
+        public decimal deleteprice { get; set; }
 
         /// <summary>
         /// 能用的房间
@@ -442,7 +450,107 @@ namespace Model
         /// 房型图片
         /// </summary>
         public List<StoreImgM> listimg { get; set; }
+
+        /// <summary>
+        /// 3D选房
+        /// </summary>
+        public string str_PanoramaUrl { get; set; }
     }
+
+    /// <summary>
+    /// 3D看房界面用到的类
+    /// </summary>
+    public class PanoramaM
+    {
+        /// <summary>
+        /// 门店ID
+        /// </summary>
+        public int Ing_StoreID { get; set; }
+
+        /// <summary>
+        /// 返回的url
+        /// </summary>
+        public string backurl { get; set; }
+        /// <summary>
+        /// 此url
+        /// </summary>
+        public string rawurl { get; set; }
+        /// <summary>
+        /// 门店名称
+        /// </summary>
+        public string str_StoreName { get; set; }
+
+
+        /// <summary>
+        /// 门店全称 
+        /// </summary>
+        public string str_StoreFullName { get; set; }
+
+        /// <summary>
+        /// 来期
+        /// </summary>
+        public DateTime dtArr { get; set; }
+
+        /// <summary>
+        /// 来期的字符串
+        /// </summary>
+        public string strArr
+        {
+            get
+            {
+                return dtArr.ToString("MM月dd日");
+            }
+        }
+
+        /// <summary>
+        /// 离期
+        /// </summary>
+        public DateTime dtDep { get; set; }
+
+        /// <summary>
+        /// 离期的字符串
+        /// </summary>
+        public string strDep
+        {
+            get
+            {
+                return dtDep.ToString("MM月dd日");
+            }
+        }
+        /// <summary>
+        /// 房型编码
+        /// </summary>
+        public string RoomTypeCode { get; set; }
+
+        /// <summary>
+        /// 房型名称
+        /// </summary>
+        public string RoomTypeName { get; set; }
+
+        /// <summary>
+        /// 错误信息
+        /// </summary>
+        public string message { get; set; }
+
+        /// <summary>
+        /// 3D看房地址
+        /// </summary>
+        public string address { get; set; }
+        /// <summary>
+        /// 会员卡ID
+        /// </summary>
+        public int lngvipcardid { get; set; }
+
+        /// <summary>
+        /// 是否全天房 0表示全天
+        /// </summary>
+        public int HourID { get; set; }
+        /// <summary>
+        /// 房型id
+        /// </summary>
+        public int roomtypeid { get; set; }
+    }
+
 
 
     /// <summary>
@@ -602,6 +710,10 @@ namespace Model
         /// 会员首住的房价
         /// </summary>
         public decimal dec_FirstLivePrice { get; set; }
+        /// <summary>
+        /// 是不是首住单
+        /// </summary>
+        public int IsFirstPrice { get; set; }
 
         /// <summary>
         /// 钟点房方案，如果为0，则表示全天房

@@ -242,9 +242,9 @@ namespace DAL
         /// <param name="cusname"></param>
         /// <param name="openid"></param>
         /// <returns></returns>
-        public int BindWeChatExec(string mobile, string cusname, string openid, string ident, int StoreID = 0, string remark = "微信注册", string eml = "WeChat")
+        public int BindWeChatExec(string mobile, string cusname, string openid, string ident, int StoreID = 0, string remark = "微信注册", string eml = "WeChat",int CardTypeID=0)
         {
-            string strSql = "EXEC U_WeChat_AddVipInfo @vipName,@pwd,@sex,@zjType,@zjNo,@tel,@fax,@mt,@eml,@addr,@zip,@remark,@StoreID,@openid";
+            string strSql = "EXEC U_WeChat_AddVipInfo @vipName,@pwd,@sex,@zjType,@zjNo,@tel,@fax,@mt,@eml,@addr,@zip,@remark,@StoreID,@openid,@CardTypeID";
 
             this.Sqlca.AddParameter("@vipName", cusname);
             this.Sqlca.AddParameter("@pwd", ConfigValue.GetMD5_32("123456"));
@@ -260,7 +260,7 @@ namespace DAL
             this.Sqlca.AddParameter("@remark", remark);
             this.Sqlca.AddParameter("@StoreID", StoreID);
             this.Sqlca.AddParameter("@openid", openid);
-
+            this.Sqlca.AddParameter("@CardTypeID", CardTypeID);
             int rev = this.Sqlca.GetInt32(strSql);
 
             this.Sqlca.ClearParameter();
@@ -301,9 +301,10 @@ namespace DAL
         /// <param name="cusname"></param>
         /// <param name="openid"></param>
         /// <returns></returns>
-        public bool BindWeChat(string mobile, string cusname, string openid, int StoreID,string ident)
+        public bool BindWeChat(string mobile, string cusname, string openid, int StoreID,string ident,int CardTypeID)
         {
-            int rev = BindWeChatExec(mobile, cusname, openid, ident, StoreID,"","");
+            
+            int rev = BindWeChatExec(mobile, cusname, openid, ident, StoreID,"","",CardTypeID);
             //if (rev > 0)
             //{
             //    this.LastError = "L系统错误，请稍后再试";
@@ -408,8 +409,21 @@ namespace DAL
                     this.LastError = "L你的身份证被注册成会员卡号了，请至前台处理";
                     return false;
                 }
+                SysParaD parad = new SysParaD();
+                SysParaM param = parad.GetRecord("WcVip0");
+                if (param == null || String.IsNullOrEmpty(param.str_ParaCode))
+                {
+                    this.LastError = "L未配置会员等级制度";
+                    return false;
+                }
+                int cardTypeID = 0;
+                if (!int.TryParse(param.str_ParaCode, out cardTypeID))
+                {
+                    this.LastError = "L会员等级制度配置错误";
+                    return false;
+                }
                 ///新增会员
-                return BindWeChat(mobile, cusname, openid, StoreID,ident);
+                return BindWeChat(mobile, cusname, openid, StoreID,ident, cardTypeID);
             }
 
             if (!string.IsNullOrEmpty(cardM.str_wcopenid))
@@ -428,6 +442,23 @@ namespace DAL
             {
                 this.LastError = "L您已经是我们的会员，但手机不匹配，请至我们酒店前台更正资料，再进行绑定";
                 return false;
+            }
+            if (cardM.Ing_VipCardType <= 0)//
+            {
+                SysParaD parad = new SysParaD();
+                SysParaM param = parad.GetRecord("WcVip0");
+                if (param == null || String.IsNullOrEmpty(param.str_ParaCode))
+                {
+                    this.LastError = "L未配置会员等级制度";
+                    return false;
+                }
+                int cardTypeID = 0;
+                if (!int.TryParse(param.str_ParaCode, out cardTypeID))
+                {
+                    this.LastError = "L会员等级制度配置错误";
+                    return false;
+                }
+                cardM.Ing_VipCardType = cardTypeID;
             }
             //cardM.str_Unionid = unionid;
             cardM.str_wcopenid = openid;
@@ -1682,7 +1713,7 @@ namespace DAL
             if (mmm != null) throw new MessageException("您的openid已注册");
             
 
-          int id=  BindWeChatExec(model.mobile, model.name, model.openid, model.idcard,0,"商城注册","Shop");
+          int id=  BindWeChatExec(model.mobile, model.name, model.openid, model.idcard,0,"商城注册","Shop",0);
           if(id>0&&!string.IsNullOrEmpty(model.nickname))
           {
               mmm = GetCardByIdent(model.idcard);

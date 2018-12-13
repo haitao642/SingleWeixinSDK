@@ -285,16 +285,16 @@ namespace DAL
             }
 
             VipCardInfoM CardInfoM = CardInfoD.GetM<VipCardInfoM>(m.Ing_Fk_VipCardID,this.Sqlca);
-            ////如果是首住优惠的订单,重置为空
-            //if (CardInfoM != null && CardInfoM.Ing_FirstMaster.HasValue && m.Ing_Pk_MasterID == CardInfoM.Ing_FirstMaster.Value) 
-            //{
-            //    CardInfoM.Ing_FirstMaster = 0;
-            //    if (!CardInfoD.UpdateRecord<VipCardInfoM>(CardInfoM, CardInfoM.Ing_Pk_VipCardId, this.Sqlca)) 
-            //    {
-            //        this.LastError = this.Sqlca.LastError;
-            //        goto updateerr;
-            //    }
-            //}
+            //如果是首住优惠的订单,重置为空
+            if (CardInfoM != null && CardInfoM.Ing_FirstMaster.HasValue && m.Ing_Pk_MasterID == CardInfoM.Ing_FirstMaster.Value)
+            {
+                CardInfoM.Ing_FirstMaster = 0;
+                if (!CardInfoD.UpdateRecord<VipCardInfoM>(CardInfoM, CardInfoM.Ing_Pk_VipCardId, this.Sqlca))
+                {
+                    this.LastError = this.Sqlca.LastError;
+                    goto updateerr;
+                }
+            }
 
             decimal TotalCharge = 0;//已使用储值金额
             decimal WalletCharge = 0;//微信钱包
@@ -584,7 +584,7 @@ namespace DAL
                 this.LastError = "L系统错误，请稍后重试";
                 return 0;
             }
-
+            
             VipCardInfoD cardinfoD = new VipCardInfoD();
             VipCardInfoM cardinfoM = new VipCardInfoM();
             cardinfoM = cardinfoD.GetM<VipCardInfoM>(model.lngvipcardid);
@@ -597,14 +597,14 @@ namespace DAL
 
             if (model.HourID == 0)
             {
-                //if (model.dec_FirstLivePrice > 0)
-                //{
-                //    if (cardinfoM.Ing_FirstMaster.HasValue && cardinfoM.Ing_FirstMaster.Value > 0)
-                //    {
-                //        this.LastError = "L你已经使用过首住优惠的资格";
-                //        return 0;
-                //    }
-                //}
+                if (model.IsFirstPrice==1)
+                {
+                    if (cardinfoM.Ing_FirstMaster.HasValue && cardinfoM.Ing_FirstMaster.Value > 0)
+                    {
+                        this.LastError = "L你已经使用过首住优惠的资格";
+                        return 0;
+                    }
+                }
             }
 
 
@@ -817,23 +817,23 @@ namespace DAL
 
             if (model.HourID == 0)
             {
-                /////首住优惠的
-                //if (model.dec_FirstLivePrice > 0)
-                //{
-                //    cardinfoM.Ing_FirstMaster = masID;
-                //    if (!cardinfoD.UpdateRecord<VipCardInfoM>(cardinfoM, cardinfoM.Ing_Pk_VipCardId, this.Sqlca))
-                //    {
-                //        this.LastError = "L更新首住优惠标识出错";
-                //        goto updateerr;
-                //    }
+                ///首住优惠的
+                if (model.IsFirstPrice == 1)
+                {
+                    cardinfoM.Ing_FirstMaster = masID;
+                    if (!cardinfoD.UpdateRecord<VipCardInfoM>(cardinfoM, cardinfoM.Ing_Pk_VipCardId, this.Sqlca))
+                    {
+                        this.LastError = "L更新首住优惠标识出错";
+                        goto updateerr;
+                    }
 
-                //    //configM.Ing_UserNum = configM.Ing_UserNum + 1;
-                //    //if (!configD.UpdateRecord<FirstCheckConfigM>(configM, configM.Ing_ID, this.Sqlca))
-                //    //{
-                //    //    this.LastError = "L更新首住优惠数量出错";
-                //    //    goto updateerr;
-                //    //}
-                //}
+                    //configM.Ing_UserNum = configM.Ing_UserNum + 1;
+                    //if (!configD.UpdateRecord<FirstCheckConfigM>(configM, configM.Ing_ID, this.Sqlca))
+                    //{
+                    //    this.LastError = "L更新首住优惠数量出错";
+                    //    goto updateerr;
+                    //}
+                }
             }
 
             //添加操作日志

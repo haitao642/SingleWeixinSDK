@@ -42,13 +42,21 @@
         </div>
     </div>
     <div class="am-g" style="padding:15px!important;">
-        <div class="am-u-sm-12" style="height:120px;background-color:#5E5C5E;border-radius:7px;">
+        <div class="am-u-sm-12" style="height:120px;background-color:#5E5C5E;border-radius:7px;"  onclick="GoMyInfo()">
             <div class="am-u-sm-4 am-vertical-align" style="height:120px;text-align:center;">
-                <img src="@Model.headerimg" class="am-vertical-align-middle" style="width:80px;height:80px;border-radius:40px;" onclick="GoMyInfo()">
+                <img src="@Model.headerimg" class="am-vertical-align-middle" style="width:80px;height:80px;border-radius:40px;">
             </div>
             <div class="am-u-sm-8 am-vertical-align" style="height:120px;">
 
                 <text class="am-vertical-align-middle" style="color:#fff;">@Model.str_CusName<br />@Model.strmobile</text>
+                @if (Model.cardType == 1)
+                {
+                    <img style="width:30px;height:40px;margin-left:10px;" src="~/Images/vip.png" />
+                }
+                else if (Model.cardType == 2)
+                {
+                    <img style="width:30px;height:40px;margin-left:10px;" src="~/Images/svip.png" />
+                }
             </div>
         </div>
     </div>

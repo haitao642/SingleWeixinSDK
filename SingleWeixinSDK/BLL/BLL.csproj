@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="ConvertResponseB.cs" />
     <Compile Include="Cust\CustB.cs" />
+    <Compile Include="Function\FunctionB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reservation\AwardB.cs" />
     <Compile Include="Reservation\AwardGoodsB.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="System\SMS\SMSSendB.cs" />
     <Compile Include="System\SMS\WeChatB.cs" />
     <Compile Include="System\SMS\WechatHisB.cs" />
+    <Compile Include="System\SysParaB.cs" />
     <Compile Include="System\TimeRoomRuleB.cs" />
     <Compile Include="System\UsersGrpB.cs" />
     <Compile Include="System\WechatPositionB.cs" />

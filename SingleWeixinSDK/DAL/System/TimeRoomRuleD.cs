@@ -91,8 +91,8 @@ namespace DAL
         /// <returns></returns>
         public List<TimeRoomRuleM> GetRule(int Ing_StoreID,string RoomType)
         {
-            string strSql = @"SELECT * FROM dbo.T_TimeRoomRule a WHERE a.Ing_Sta=1 AND a.str_Remark='wechat'
-                                AND ISNULL(a.str_RoomType,'-')='{1}'";
+            string strSql = @"SELECT * FROM dbo.T_TimeRoomRule a WHERE a.Ing_Sta=1 AND ISNULL(a.Ing_StoreID,0)={0}
+                                AND (ISNULL(a.str_RoomType,'-')='{1}' or ISNULL(a.str_RoomType,'')='')";
             strSql = string.Format(strSql,Ing_StoreID,RoomType);
             return this.GetQueryM<TimeRoomRuleM>(strSql);
         }

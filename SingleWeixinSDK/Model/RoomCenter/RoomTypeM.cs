@@ -139,6 +139,10 @@ namespace Model.RoomCenter
                 return IngDefaultID == 0 ? "" : "默认";
             }
         }
+        /// <summary>
+        /// 3D看房路径
+        /// </summary>
+        public string str_PanoramaUrl { get; set; }
     }
 
     /// <summary>

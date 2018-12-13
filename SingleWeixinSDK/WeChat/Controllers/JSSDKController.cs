@@ -48,19 +48,26 @@ namespace WeChat.Controllers
             model.Ing_Pk_VipCardId = cardM.Ing_Pk_VipCardId;
             model.str_paypassword = cardM.str_paypassword;
             model.dec_WechatPrice = cardM.dec_WechatPrice;
-            BLL.Wechat.WeChatConfigB bllconfig = new WeChatConfigB();
-            WeChatConfigM wechatconfig = bllconfig.GetWeixinConfig(storeid);
-            var appId = wechatconfig.AppID;
+            BLL.StoreInfoB bll1 = new BLL.StoreInfoB();
+            StoreM m1 = bll1.GetStore(storeid);
+            if (m1 == null)
+            {
+                model.message = "酒店信息不存在";
+                return PartialView(model);
+            }
+                BLL.Wechat.WeChatConfigB bllconfig = new WeChatConfigB();
+            Model.WeChatConfigM wechatconfig = bllconfig.GetWeixinConfigForOta(m1.str_LockStoreNo);
+            var appId = wechatconfig.str_AppID;
             var nonceStr = Util.CreateNonce_str();
             var timestamp = Util.CreateTimestamp();
             var domain = System.Configuration.ConfigurationManager.AppSettings["Domain"];
             var url = domain + Request.Url.PathAndQuery;
             Boolean openJSSDK = false;
-            if (wechatconfig.OpenJSSDK == 1)
+            if (wechatconfig.Ing_OpenJSSDK == 1)
             {
                 openJSSDK = true;
             }
-            TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.AppID, wechatconfig.AppSecret, openJSSDK);
+            TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.str_AppID, wechatconfig.str_AppSecret, openJSSDK);
             var jsTickect = tokenHelper.GetJSTickect(appId);
             var string1 = "";
             var signature = JSAPI.GetSignature(jsTickect, nonceStr, timestamp, url, out string1);

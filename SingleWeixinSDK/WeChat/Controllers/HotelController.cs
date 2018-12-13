@@ -1,8 +1,12 @@
-﻿using BLL.Wechat;
+﻿using BLL;
+using BLL.Function;
+using BLL.System;
+using BLL.Wechat;
 using Deepleo.Weixin.SDK.Helpers;
 using Deepleo.Weixin.SDK.JSSDK;
 using Model;
 using Model.Cust;
+using Model.Function;
 using Model.RoomCenter;
 using Model.WeiXin;
 using Public;
@@ -42,6 +46,16 @@ namespace WeChat.Controllers
             //int.TryParse(strFront6Hour, out Front6Hour);
 
             string openid = AuthorizationManager.GetOpenID;
+            string redirect_url = "/WeChatLogin/index?storeid=" + storeid;
+            Model.VipCardInfoM cardM = new Model.VipCardInfoM();
+            BLL.VipCardInfoB cardB = new BLL.VipCardInfoB();
+            cardM = cardB.GetVipCardByStoreid(openid, storeid);
+            if (cardM == null)
+            {
+                ///跳到绑定界面
+                return new RedirectResult(redirect_url);
+            }
+            
             HotelDetailM model = new HotelDetailM();
             //model.showAddOneNight = 0;
             //model.Front6Hour = Front6Hour;
@@ -59,8 +73,6 @@ namespace WeChat.Controllers
                 model.message = "酒店信息不存在";
                 return PartialView(model);
             }
-            WeChatConfigB bllwe = new WeChatConfigB();
-            WeChatConfigM wechatconfig = bllwe.GetWeixinConfig(storeid);
             HotelM searchM = new HotelM();
             searchM.openid = openid;
             searchM.dtArr = dtarr;
@@ -75,10 +87,23 @@ namespace WeChat.Controllers
                 return PartialView(model);
             }
             model.storeDetailM = m1;
+            WeChatConfigB bllwe = new WeChatConfigB();
+            Model.WeChatConfigM wechatconfig = bllwe.GetWeixinConfigForOta(m1.str_LockStoreNo);
             ///房型
             BLL.RoomTypeB bll4 = new BLL.RoomTypeB();
             List<RoomType1M> list4 = new List<RoomType1M>();
-            list4 = bll4.GetUseFulList(storeid, model.searchM.dtArr);
+            string rateID = "";
+            if (cardM.Ing_VipCardType > 0)//会员价
+            {
+                VipCardTypeB cardTypeB = new VipCardTypeB();
+                VipCardTypeM cardtypem = cardTypeB.GetVipCardType(cardM.Ing_VipCardType);
+                if (cardtypem != null && !String.IsNullOrEmpty(cardtypem.str_RateCode))
+                {
+                    rateID = cardtypem.str_RateCode;
+                }
+            }
+            LogHelper.LogInfo("rateID:" + rateID);
+            list4 = bll4.GetUseFulList(storeid, model.searchM.dtArr,rateID);
             if (list4 == null || list4.Count == 0)
             {
                 model.message = "该酒店没有可用房型";
@@ -92,7 +117,7 @@ namespace WeChat.Controllers
                 index++;
                 m5.display_order ="roomtype_" +index;
                 m5.display_orderIcon = "roomIcon_" + index;
-                m5.listimg = bll4.GetRoomTypeImg(storeid, m5.strRoomTypeCode);
+                m5.listimg = bll4.GetRoomTypeImg(storeid, m5.Ing_Pk_RoomTypeID);
                 List<RoomCanUseM> cmList = bll5.GetRoomCanUse(storeid, model.searchM.dtArr, model.searchM.dtDep, m5.strRoomTypeCode);
                 if (cmList == null || cmList.Count == 0)
                 {
@@ -116,6 +141,7 @@ namespace WeChat.Controllers
                 {
                     m5.dec_FirstLivePrice = 0;
                 }
+                m5.deleteprice = m5.price0 - m5.price1;
             }
             model.listroomtype = list4;
 
@@ -135,16 +161,6 @@ namespace WeChat.Controllers
             int.TryParse(Request.QueryString["storeid"], out storeid);
             string openid = AuthorizationManager.GetOpenID;
             HotelDetailM model = new HotelDetailM();
-            //model.showAddOneNight = 0;
-            //model.Front6Hour = Front6Hour;
-            //if (DateTime.Now.Hour < ConfigValue.AddOneNightHour)
-            //{
-            //    model.showAddOneNight = 1;
-            //}
-            //else
-            //{
-            //    model.Front6Hour = 0;
-            //}
             model.strtime = dtarr.Hour;
             model.listroomtype = new List<RoomType1M>();
             if (storeid == 0)
@@ -152,8 +168,7 @@ namespace WeChat.Controllers
                 model.message = "酒店信息不存在";
                 return PartialView(model);
             }
-            WeChatConfigB bllwe = new WeChatConfigB();
-            WeChatConfigM wechatconfig = bllwe.GetWeixinConfig(storeid);
+          
             HotelM searchM = new HotelM();
             searchM.openid = openid;
             searchM.dtArr = dtarr;
@@ -168,8 +183,10 @@ namespace WeChat.Controllers
                 return PartialView(model);
             }
             model.storeDetailM = m1;
-            int start = wechatconfig.HourStart;
-            int end = wechatconfig.HourEnd;
+            WeChatConfigB bllwe = new WeChatConfigB();
+            Model.WeChatConfigM wechatconfig = bllwe.GetWeixinConfigForOta(m1.str_LockStoreNo);
+            int start = wechatconfig.Ing_HourStart;
+            int end = wechatconfig.Ing_HourEnd;
             model.HourStart = start;
             model.HourEnd = end;
             int cur = 0;
@@ -205,14 +222,14 @@ namespace WeChat.Controllers
                 index++;
                 m5.display_order = "roomtype_" + index;
                 m5.display_orderIcon = "roomIcon_" + index;
-                m5.listimg = bll4.GetRoomTypeImg(storeid, m5.strRoomTypeCode);
+                m5.listimg = bll4.GetRoomTypeImg(storeid,m5.Ing_Pk_RoomTypeID);
                 ///没有配钟点房方案的
                 if (m5.price0 == 0)
                 {
                     continue;
                 }
                 ///有个20%的限制，  那么，小于总数小于5间的可以直接过滤
-                if (m5.roomnum < 5)
+                if (m5.roomnum < 3)
                 {
                     continue;
                 }
@@ -236,7 +253,7 @@ namespace WeChat.Controllers
             model.listroomtype = list4;
             return PartialView(model);
         }
-        [WeixinOAuthAuthorizeAttribute]
+        //[WeixinOAuthAuthorizeAttribute]
         public ActionResult HotelDetail()
         {
             int storeid = 0;
@@ -249,21 +266,29 @@ namespace WeChat.Controllers
                 model.message = "酒店信息不存在";
                 return PartialView(model);
             }
+            BLL.StoreInfoB storeinfo1B = new BLL.StoreInfoB();
+            StoreInfoM infoM = new StoreInfoM();
+            infoM = storeinfo1B.GetOne(storeid);
+            if (infoM == null)
+            {
+                model.message = "门店信息不存在";
+                return PartialView(model);
+            }
             #region 获取当前位置要用到的代码
             BLL.Wechat.WeChatConfigB bllconfig = new WeChatConfigB();
-            WeChatConfigM wechatconfig = bllconfig.GetWeixinConfig(storeid);
-            var appId = wechatconfig.AppID;
+            Model.WeChatConfigM wechatconfig = bllconfig.GetWeixinConfigForOta(infoM.str_LockStoreNo);
+            var appId = wechatconfig.str_AppID;
             var nonceStr = Util.CreateNonce_str();
             var timestamp = Util.CreateTimestamp();
             var domain = System.Configuration.ConfigurationManager.AppSettings["Domain"];
             var url = domain + Request.Url.PathAndQuery;
             LogHelper.LogInfo("url:" + url);
             Boolean openJSSDK = false;
-            if (wechatconfig.OpenJSSDK == 1)
+            if (wechatconfig.Ing_OpenJSSDK == 1)
             {
                 openJSSDK = true;
             }
-            TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.AppID, wechatconfig.AppSecret, openJSSDK);
+            TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.str_AppID, wechatconfig.str_AppSecret, openJSSDK);
             var jsTickect = tokenHelper.GetJSTickect(appId);
             var string1 = "";
             LogHelper.LogInfo("jsTickect:" + jsTickect);
@@ -271,7 +296,6 @@ namespace WeChat.Controllers
             ///Mozilla/5.0 (iPhone; CPU iPhone OS 5_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Mobile/9B176 MicroMessenger/4.3.2 
             ///Mozilla/5.0 (iPhone; CPU iPhone OS 5_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Mobile/9B176 MicroMessenger/4.3.2 NetType/WIFI Language/zh_CN
             var userAgent = Request.UserAgent;
-
             string userVersion = "-1";
             string str = userAgent.ToLower();///转化为小写
             if (str.Contains("micromessenger"))
@@ -293,7 +317,8 @@ namespace WeChat.Controllers
             #endregion
             searchM.openid = openid;
             model.searchM = searchM;
-
+           // model.StoreUrl = wechatconfig;
+           // LogHelper.LogInfo("StoreUrl:" + wechatconfig.StoreUrl);
             ///门店信息
             BLL.StoreInfoB bll1 = new BLL.StoreInfoB();
             StoreM m1 = bll1.GetStore(storeid);
@@ -304,12 +329,8 @@ namespace WeChat.Controllers
             }
             model.searchM.cityname = m1.str_city;
             /////酒店图片
-            model.listimg = bll1.GetStoreImg(storeid);
-
-
-
+            model.listimg = bll1.GetStoreOtaImg(storeid);
             ////酒店经纬度
-
             //LogHelper.LogInfo("酒店经纬度:" + m1.str_port_y + "," + m1.str_port_x);
 
             if (string.IsNullOrEmpty(m1.str_port_y) || string.IsNullOrEmpty(m1.str_port_x))
@@ -317,20 +338,67 @@ namespace WeChat.Controllers
                 m1.str_port_x = "117.719279";
                 m1.str_port_y = "24.507606";
             }
-
-
             BLL.NearB func = new BLL.NearB();
             ///周边
             model.strtour = func.bindDz(m1.str_port_x, m1.str_port_y, "旅游景点", 7);
             model.strmarket = func.bindDz(m1.str_port_x, m1.str_port_y, "商场", 7);
             model.strbank = func.bindDz(m1.str_port_x, m1.str_port_y, "银行", 7);
             model.strdiet = func.bindDz(m1.str_port_x, m1.str_port_y, "美食", 7);
-
             model.storeDetailM = m1;
             BLL.CommentsB bll6 = new BLL.CommentsB();
             model.Ing_TotalComment = bll6.GetTotalByStoreID(storeid);
             model.Ing_GoodComment = bll6.GetGoodByStoreID(storeid);
             return PartialView(model);
+        }
+        /// <summary>
+        /// 获取酒店功能列表
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult HotelFunctions()
+        {
+            int storeid = 0;
+            int.TryParse(Request.QueryString["storeid"], out storeid);
+            HotelFunctionM model = new HotelFunctionM();
+            if (storeid == 0)
+            {
+                model.message = "酒店信息不存在";
+                return PartialView(model);
+            }
+            BLL.StoreInfoB storeinfo1B = new BLL.StoreInfoB();
+            StoreInfoM infoM = new StoreInfoM();
+            infoM = storeinfo1B.GetOne(storeid);
+            if (infoM == null)
+            {
+                model.message = "门店信息不存在";
+                return PartialView(model);
+            }
+            model.str_StoreName = infoM.str_StoreName;
+            FunctionB bll = new FunctionB();
+            WeChatConfigB wcb = new WeChatConfigB();
+            List<FunctionM> rootList = bll.GetFunctionRootForOta(infoM.str_LockStoreNo);
+            if (rootList != null && rootList.Count > 0)
+            {
+                foreach(FunctionM item in rootList)
+                {
+                    List<FunctionM> sublist = bll.GetFunctionForParent(item.parentid);
+                    if (sublist != null) item.subList = sublist;
+                    if (item.Ing_Fk_fileID != 0)
+                    {
+                        WeChatFileM imgFile = wcb.GetOne(item.Ing_Fk_fileID);
+                        if (imgFile != null)
+                        {
+                            item.str_FileName = imgFile.str_FileName;
+                            item.str_DLPath= ConfigValue.GetValue("OTAURL") + imgFile.str_FileUrl + imgFile.str_FileName + imgFile.str_FileExt;
+                        }
+                    }
+                }
+                model.rootFunctions = rootList;
+            }else
+            {
+                model.rootFunctions = new List<FunctionM>();
+            }
+            return PartialView(model);
+
         }
         public ActionResult HotelComments()
         {
@@ -357,6 +425,111 @@ namespace WeChat.Controllers
             model.Ing_GoodComment = bll6.GetGoodByStoreID(storeid);
             return PartialView(model);
         }
+        //[WeixinOAuthAuthorizeAttribute]
+        public ActionResult Panorama()
+        {
+            string rawurl = Request.RawUrl;
+            rawurl = HttpUtility.UrlEncode(rawurl);
+            string HourID = Request.QueryString["HourID"];
+            int IHourID = 0;
+            int.TryParse(HourID, out IHourID);
+            string openid = AuthorizationManager.GetOpenID;
+            PanoramaM model = new PanoramaM();
+            model.HourID = IHourID;
+            string strarr = Request.QueryString["strarr"];
+            int Ing_StoreID = 0;
+            int.TryParse(Request.QueryString["storeid"], out Ing_StoreID);
+            if (Ing_StoreID == 0)
+            {
+                model.message = "门店信息不存在";
+                return PartialView(model);
+            }
+            model.Ing_StoreID = Ing_StoreID;
+            if (IHourID == 0)
+            {
+                string strdep = Request.QueryString["strdep"];
+                DateTime dtarr = DateTime.Now;
+                DateTime.TryParse(strarr, out dtarr);
+                DateTime dtdep = DateTime.Now;
+                DateTime.TryParse(strdep, out dtdep);
+                model.dtArr = dtarr;
+                model.dtDep = dtdep;
+                model.backurl = "/Hotel/Index?strarr=" + strarr + "&strdep=" + strdep + "&storeid=" + Ing_StoreID;
+            }
+            else
+            {
+                string strtime = Request.QueryString["strtime"];
+                DateTime dtarr = DateTime.Now;
+                DateTime.TryParse(string.Format("{0} {1}:00", strarr, strtime), out dtarr);
+                model.dtArr = dtarr;
+                model.backurl = "/Hotel/HourIndex?strarr=" + strarr + "&strtime=" + strtime + "&storeid=" + Ing_StoreID;
+            }
+            
+            int roomtypeid = 0;
+            int.TryParse(Request.QueryString["roomtypeid"], out roomtypeid);
+            model.roomtypeid = roomtypeid;
+            BLL.StoreInfoB storeinfo1B = new BLL.StoreInfoB();
+            StoreInfoM infoM = new StoreInfoM();
+            infoM = storeinfo1B.GetOne(model.Ing_StoreID);
+            if (infoM == null)
+            {
+                model.message = "门店信息不存在";
+                return PartialView(model);
+            }
+            model.str_StoreName = infoM.str_StoreName;
+            model.str_StoreFullName = infoM.str_StoreFullName;
+            model.lngvipcardid = 0;
+            Model.VipCardInfoM cardM = new Model.VipCardInfoM();
+            BLL.VipCardInfoB cardB = new BLL.VipCardInfoB();
+            cardM = cardB.GetVipCardByStoreid(openid, Ing_StoreID);
+            //cardM = cardB.GetVipCardByStoreid(openid, Ing_StoreID);
+            if (cardM == null)
+            {
+                model.message = "请先绑定，再进行预订操作";
+                return PartialView(model);
+            }
+            model.lngvipcardid = cardM.Ing_Pk_VipCardId;
+            ///房型
+            BLL.RoomTypeB bll1 = new BLL.RoomTypeB();
+            RoomTypeM model1 = new RoomTypeM();
+            model1 = bll1.GetOne(roomtypeid);
+            if (model1 == null)
+            {
+                model.message = "没有此房型";
+                return PartialView(model);
+            }
+            model.RoomTypeCode = model1.str_TypeCode;
+            model.RoomTypeName = model1.str_TypeName;
+            if (String.IsNullOrEmpty(model1.str_PanoramaUrl))
+            {
+                model.message = "没有配置此房型的全景方案";
+                return PartialView(model);
+            }
+            model.address = model1.str_PanoramaUrl;
+            LogHelper.LogInfo("address:" + model.address);
+            ///姓名，手机
+            BLL.VipInfoB bll2 = new BLL.VipInfoB();
+            VipInfoM model2 = new VipInfoM();
+            model2 = bll2.GetOne(cardM.Ing_Fk_VipID);
+
+            if (model2 == null || !model2.Ing_Fk_CustID.HasValue)
+            {
+                model.message = "不存在此会员信息";
+                return PartialView(model);
+            }
+
+            BLL.CustB bll3 = new BLL.CustB();
+            CustM model3 = new CustM();
+            model3 = bll3.GetOne(model2.Ing_Fk_CustID.Value);
+            if (model3 == null)
+            {
+                model.message = "不存在此会员信息-档案";
+                return PartialView(model);
+            }
+            return PartialView(model);
+        }
+
+
         [WeixinOAuthAuthorizeAttribute]
         public ActionResult WriteOrder()
         {
@@ -433,6 +606,8 @@ namespace WeChat.Controllers
             }
             model.RoomTypeCode = model1.str_TypeCode;
             model.RoomTypeName = model1.str_TypeName;
+
+            
             ///姓名，手机
             BLL.VipInfoB bll2 = new BLL.VipInfoB();
             VipInfoM model2 = new VipInfoM();
@@ -458,14 +633,26 @@ namespace WeChat.Controllers
 
             ///会员房价码
             BLL.MasterB masB = new BLL.MasterB();
-            RoomRateDefaultM m2 = masB.GetRoomRateDefault(model.Ing_StoreID, dtarr, model.lngvipcardid);
-
             string viproomrate = string.Empty;
-            if (m2 != null)
+            if (cardM.Ing_VipCardType > 0)//会员价
             {
-                viproomrate = m2.str_RateID;
+                VipCardTypeB cardTypeB = new VipCardTypeB();
+                VipCardTypeM cardtypem = cardTypeB.GetVipCardType(cardM.Ing_VipCardType);
+                if (cardtypem != null && !String.IsNullOrEmpty(cardtypem.str_RateCode))
+                {
+                    viproomrate = cardtypem.str_RateCode;
+                }
+            }
+            if (String.IsNullOrEmpty(viproomrate))//默认房价码
+            {
+                RoomRateDefaultM m2 = masB.GetRoomRateDefault(model.Ing_StoreID, dtarr, model.lngvipcardid);
+                if (m2 != null)
+                {
+                    viproomrate = m2.str_RateID;
+                }
             }
             model.VipRateCode = viproomrate;
+            LogHelper.LogInfo("VipRateCode:" + viproomrate);
             ///可用数量
             List<RoomCanUseM> cmList = masB.GetRoomCanUse(model.Ing_StoreID, model.dtArr, model.dtDep, model.RoomTypeCode);
             if (cmList == null || cmList.Count == 0)
@@ -712,19 +899,23 @@ namespace WeChat.Controllers
         /// <returns></returns>
         public JsonResult SaveWriteOrder(WriteOrderM model)
         {
+            LogHelper.LogInfo("Save");
             JsonResult json = new JsonResult();
+            BLL.StoreInfoB bll1 = new BLL.StoreInfoB();
+            StoreM m1 = bll1.GetStore(model.Ing_StoreID);
             BLL.Wechat.WeChatConfigB bllconfig = new WeChatConfigB();
-            WeChatConfigM wechatconfig = bllconfig.GetWeixinConfig(model.Ing_StoreID);
+            Model.WeChatConfigM wechatconfig = bllconfig.GetWeixinConfigForOta(m1.str_LockStoreNo);
             Boolean openJSSDK = false;
-            if (wechatconfig.OpenJSSDK == 1)
+            if (wechatconfig.Ing_OpenJSSDK == 1)
             {
                 openJSSDK = true;
             }
-            TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.AppID, wechatconfig.AppSecret, openJSSDK);
+            TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.str_AppID, wechatconfig.str_AppSecret, openJSSDK);
             model.token = tokenHelper.GetToken();
             BLL.MasterB bll = new BLL.MasterB();
+            
             json.Data = bll.SaveOrder(model);
-
+           
             return json;
 
         }

@@ -53,14 +53,14 @@ namespace WeChat.Controllers
             try
             {
                 BLL.Wechat.WeChatConfigB bllconfig = new WeChatConfigB();
-                WeChatConfigM wechatconfig = bllconfig.GetWeixinConfig(storeid);
+                Model.WeChatConfigM wechatconfig = bllconfig.GetWeixinConfigForOta(infoM.str_LockStoreNo);
                 
                 Boolean openJSSDK = false;
-                if (wechatconfig.OpenJSSDK == 1)
+                if (wechatconfig.Ing_OpenJSSDK == 1)
                 {
                     openJSSDK = true;
                 }
-                TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.AppID, wechatconfig.AppSecret, openJSSDK);
+                TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.str_AppID, wechatconfig.str_AppSecret, openJSSDK);
                 
                 var token = tokenHelper.GetToken(true);
                 //TODO: 获取用户基本信息后，将用户信息存储在本地。

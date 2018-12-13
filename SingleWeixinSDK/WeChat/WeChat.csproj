@@ -679,6 +679,7 @@
     <Content Include="Images\star-on.png" />
     <Content Include="Images\star.jpg" />
     <Content Include="Images\success.jpg" />
+    <Content Include="Images\svip.png" />
     <Content Include="Images\tips.png" />
     <Content Include="Images\turntable-bg.jpg" />
     <Content Include="Images\turntable.jpg" />
@@ -687,6 +688,7 @@
     <Content Include="Images\unbind.jpg" />
     <Content Include="Images\unfold.png" />
     <Content Include="Images\usebac.jpg" />
+    <Content Include="Images\vip.png" />
     <Content Include="Images\vipcharge.jpg" />
     <Content Include="Images\vol+.png" />
     <Content Include="Images\vol-.png" />
@@ -879,9 +881,12 @@
     <Content Include="Views\Smart\Index.cshtml" />
     <Content Include="Views\Smart\KLAir.cshtml" />
     <Content Include="Views\Smart\Sound.cshtml" />
+    <Content Include="Views\Hotel\Panorama.cshtml" />
+    <Content Include="Views\Hotel\HotelFunctions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Cert\" />
     <Folder Include="Images\RoomImg\180\单间\" />
     <Folder Include="Images\RoomImg\180\套房\" />
     <Folder Include="Images\RoomImg\180\小单\" />

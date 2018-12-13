@@ -1,3 +1,4 @@
+using DAL.Wechat;
 using Model;
 using Public;
 using System;
@@ -119,6 +120,49 @@ namespace DAL
                 StoreImgM model = new StoreImgM();
                 model.Ing_StoreID = Ing_StoreID;
                 model.str_DLPath = "/Images/StoreImg/" + Ing_StoreID + "/" + Path.GetFileName(path); //只获取文件名image.jpgpath;
+                model.order = index;
+                list.Add(model);
+            }
+
+            if (list.Count == 0)
+            {
+                index++;
+                StoreImgM model = new StoreImgM();
+                model.Ing_StoreID = Ing_StoreID;
+                model.str_DLPath = "/Images/StoreImg/noImg/noImg.jpg";
+                model.order = index;
+                list.Add(model);
+            }
+            return list;
+        }
+        /// <summary>
+        /// 获取单个门店的酒店信息图片
+        /// </summary>
+        /// <param name="Ing_StoreID"></param>
+        /// <returns></returns>
+        public List<StoreImgM> GetStoreOtaImg(int Ing_StoreID)
+        {
+            List<StoreImgM> list = new List<StoreImgM>();
+            StoreM m1 = GetStore(Ing_StoreID);
+            int index = 0;
+            if (m1 == null)
+            {
+                index++;
+                StoreImgM model = new StoreImgM();
+                model.Ing_StoreID = Ing_StoreID;
+                model.str_DLPath = "/Images/StoreImg/noImg/noImg.jpg";
+                model.order = index;
+                list.Add(model);
+                return list;
+            }
+            WeChatConfigD wcd = new WeChatConfigD();
+            List <WeChatFileM> pic= wcd.getStoreImgList(m1.str_LockStoreNo);
+            foreach (WeChatFileM path in pic)
+            {
+                index++;
+                StoreImgM model = new StoreImgM();
+                model.Ing_StoreID = Ing_StoreID;
+                model.str_DLPath = ConfigValue.GetValue("OTAURL") + path.str_FileUrl + path.str_FileName + path.str_FileExt;
                 model.order = index;
                 list.Add(model);
             }
