@@ -263,6 +263,9 @@ namespace DAL
                 goto updateerr;
             }
 
+           
+            
+
 
             ///默认 取消的
             string strSql = "UPDATE T_Master SET str_Sta='X',dt_CancelTime=GETDATE(),str_memo='',dec_charge=dec_credit WHERE  Ing_Pk_MasterID={0}";
@@ -271,6 +274,7 @@ namespace DAL
             bool rev = this.Sqlca.ExecuteNonQuery(strSql);
             if (!rev)
             {
+
                 this.LastError = this.Sqlca.LastError;
                 goto updateerr;
             }
@@ -297,7 +301,7 @@ namespace DAL
             }
 
             decimal TotalCharge = 0;//已使用储值金额
-            decimal WalletCharge = 0;//微信钱包
+           // decimal WalletCharge = 0;//微信钱包
 
             foreach (AccM m10 in listacc)
             {
@@ -319,12 +323,12 @@ namespace DAL
                     TotalCharge += m10.dec_Credit ?? 0;
                 }
 
-                if (!string.IsNullOrEmpty(m10.str_PcCode) && (m10.str_PcCode.Equals("9906") || m10.str_PcCode.Trim().Equals("9905")))
-                {
-                    WalletCharge += m10.dec_Credit ?? 0;
-                }
+                //if (!string.IsNullOrEmpty(m10.str_PcCode) && (m10.str_PcCode.Equals("9906") || m10.str_PcCode.Trim().Equals("9905")))
+                //{
+                //    WalletCharge += m10.dec_Credit ?? 0;
+                //}
                 LogHelper.LogInfo(string.Format("sue微信支付返回,储值金额:{0},微信金额:{1},账务金额{2},账务id:{3},主单id:{4},pccode:{5},会员卡id:{6}"
-                                            , TotalCharge, WalletCharge, m10.dec_Credit ?? 0, m10.Ing_Acc_Id, m10.Ing_Fk_MasterID, m10.str_PcCode, CardInfoM.Ing_Pk_VipCardId));
+                                            , TotalCharge, 0, m10.dec_Credit ?? 0, m10.Ing_Acc_Id, m10.Ing_Fk_MasterID, m10.str_PcCode, CardInfoM.Ing_Pk_VipCardId));
 
                 ///插入一条负的账务
                 AccM m3 = new AccM();
@@ -384,47 +388,12 @@ namespace DAL
                         goto updateerr;
                     }
                 }
-                else
-                {
-                    model1.Reamrk = "微信预订微信支付--返回";
-                    WechatWalletM WalletM = new WechatWalletM
-                    {
-                        Ing_Fk_MasterId=m.Ing_Pk_MasterID,
-                        Ing_Fk_VipcardId=m.Ing_Fk_VipCardID??0,
-                        str_Memo = model1.Reamrk,
-                        str_Creator="Wechat",
-                        dt_Create=DateTime.Now,
-                        dec_Price = m10.dec_Credit??0
-                       
-                    };
-                    if (!WalletD.UpdateRecord<WechatWalletM>(WalletM, WalletM.Ing_PKID, this.Sqlca)) 
-                    {
-                        this.LastError = "L微信支付返冲失败";
-                        goto updateerr;
-                    } 
-                }
-
-
-
-
-                ///如果是微信支付，把对应的支付记录的状态改成 2
-                if (m10.str_PcCode.Trim().Equals("9905"))
-                {
-                    strSql = "UPDATE dbo.T_WxPayResult SET Ing_Sta=2 WHERE Ing_type=0 AND Ing_pkid={0} AND Ing_Sta=1";
-                    strSql = string.Format(strSql, model.id);
-                    rev = this.Sqlca.ExecuteNonQuery(strSql);
-                    if (!rev)
-                    {
-                        this.LastError = this.Sqlca.LastError;
-                        goto updateerr;
-                    }
-                }
             }
  
-            if (TotalCharge > 0||WalletCharge>0) //扣减已使用的储值金额/微信钱包
+            if (TotalCharge > 0) //扣减已使用的储值金额
             {
-                strSql = "update T_VipCard_Info set dec_TotalSurplusMoney=isnull(dec_TotalSurplusMoney,0)+{0},dec_WechatPrice=isnull(dec_WechatPrice,0)+{1} where Ing_Pk_VipCardId={2}";
-                strSql = string.Format(strSql, TotalCharge,WalletCharge, m.Ing_Fk_VipCardID ?? 0);
+                strSql = "update T_VipCard_Info set dec_TotalSurplusMoney=isnull(dec_TotalSurplusMoney,0)+{0} where Ing_Pk_VipCardId={2}";
+                strSql = string.Format(strSql, TotalCharge, m.Ing_Fk_VipCardID ?? 0);
                 rev = this.Sqlca.ExecuteNonQuery(strSql);
                 if (!rev)
                 {

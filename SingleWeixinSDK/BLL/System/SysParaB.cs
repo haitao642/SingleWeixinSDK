@@ -11,9 +11,9 @@ namespace BLL.System
     public class SysParaB
     {
         SysParaD dal = new SysParaD();
-        public SysParaM GetRecord(string str_ParaType)
+        public SysParaM GetRecord(string str_ParaType,int storeid)
         {
-            return dal.GetRecord(str_ParaType);
+            return dal.GetRecord(str_ParaType,storeid);
         }
     }
 }

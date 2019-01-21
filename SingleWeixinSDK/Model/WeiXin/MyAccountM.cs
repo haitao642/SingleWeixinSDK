@@ -244,9 +244,10 @@ namespace Model
         public string token { get; set; }
 
         /// <summary>
-        /// 0普通取消,1微信原路返回取消
+        /// 微信配置类
         /// </summary>
-        public int type { get; set; }
+        public WeChatConfigM config { get; set; }
+
     }
 
     /// <summary>

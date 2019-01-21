@@ -85,10 +85,10 @@ namespace DAL
 
             return this.GetQueryM<SysParaM>(strSql).FirstOrDefault();
         }
-        public SysParaM GetRecord(string str_ParaType)
+        public SysParaM GetRecord(string str_ParaType,int storeid)
         {
-            string strSql = "SELECT * from T_Sys_BusnPara a WHERE a.str_ParaType='{0}'";
-            strSql = string.Format(strSql, str_ParaType);
+            string strSql = "SELECT * from T_Sys_BusnPara a WHERE a.str_ParaType='{0}' and a.Ing_StoreID={1}";
+            strSql = string.Format(strSql, str_ParaType,storeid);
 
             return this.GetQueryM<SysParaM>(strSql).FirstOrDefault();
         }

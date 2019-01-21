@@ -410,7 +410,7 @@ namespace DAL
                     return false;
                 }
                 SysParaD parad = new SysParaD();
-                SysParaM param = parad.GetRecord("WcVip0");
+                SysParaM param = parad.GetRecord("WcVip0", StoreID);
                 if (param == null || String.IsNullOrEmpty(param.str_ParaCode))
                 {
                     this.LastError = "L未配置会员等级制度";
@@ -446,7 +446,7 @@ namespace DAL
             if (cardM.Ing_VipCardType <= 0)//
             {
                 SysParaD parad = new SysParaD();
-                SysParaM param = parad.GetRecord("WcVip0");
+                SysParaM param = parad.GetRecord("WcVip0", StoreID);
                 if (param == null || String.IsNullOrEmpty(param.str_ParaCode))
                 {
                     this.LastError = "L未配置会员等级制度";

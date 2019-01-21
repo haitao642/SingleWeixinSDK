@@ -65,6 +65,7 @@ namespace BLL
         {
             BaseResponseModel response =new BaseResponseModel();
             bool rev = dal.SaveOrUpdate(model);
+            response.data = (rev ? 1 : 0);
             response.data = model;
             ConvertResponseB.HandResponse(response, dal.LastError);
             return response;

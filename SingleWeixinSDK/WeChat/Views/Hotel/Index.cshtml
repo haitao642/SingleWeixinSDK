@@ -182,7 +182,7 @@
                             </div>
                             <div class="am-u-sm-3" style="height:50px;text-align:center;">
                                
-                                @if (m.CanUseRoom > 0)
+                                @if (m.CanUseRoom > 0&&m.price1>0)
                                 {
                                     <button type="button" class="am-btn" style="border-radius:4px;background:#E1662D;color:#fff;" onclick="writeorder(@Model.storeDetailM.Ing_StoreID,@m.Ing_Pk_RoomTypeID)">预订</button>
                                 }

@@ -52,7 +52,7 @@ namespace WeChat.Controllers
             }
 
             SysParaB parab = new SysParaB();
-            SysParaM param = parab.GetRecord("WcVip0");
+            SysParaM param = parab.GetRecord("WcVip0", storeid);
             if (param != null && !String.IsNullOrEmpty(param.str_ParaCode))
             {
                 int cardTypeID = 0;
@@ -64,7 +64,7 @@ namespace WeChat.Controllers
                     }
                 }
             }
-            SysParaM param1 = parab.GetRecord("WcVip1");
+            SysParaM param1 = parab.GetRecord("WcVip1", storeid);
             if (param1 != null && !String.IsNullOrEmpty(param1.str_ParaCode))
             {
                 int cardTypeID = 0;
@@ -533,6 +533,7 @@ namespace WeChat.Controllers
             infoM = storeinfo1B.GetOne(m.Ing_StoreID.Value);
             BLL.Wechat.WeChatConfigB bllconfig = new WeChatConfigB();
             Model.WeChatConfigM wechatconfig = bllconfig.GetWeixinConfigForOta(infoM.str_LockStoreNo);
+            model.config = wechatconfig;
             Boolean openJSSDK = false;
             if (wechatconfig.Ing_OpenJSSDK == 1)
             {
@@ -540,14 +541,11 @@ namespace WeChat.Controllers
             }
             TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.str_AppID, wechatconfig.str_AppSecret, openJSSDK);
             model.token = tokenHelper.GetToken();
+
             WxPayResultB wxB = new WxPayResultB();
             List<WxPayResultM> list = wxB.GetMoelBypid(model.id);
-            if (list == null || list.Count == 0)
-            {
-                BaseResponseModel mod = masB.UpdateX(model);
-                json.Data = mod;
-            }
-            else
+            bool isfund = true;//是否发起退款成功
+            if (list != null || list.Count > 0)
             {
                 foreach (var wxM in list)
                 {
@@ -570,19 +568,40 @@ namespace WeChat.Controllers
                         string certpwd = wechatconfig.str_CertPwd;
                         string rev = WxPayAPI.Refund(AppID, mch_id, device_info, nonceStr, "", wxM.out_trade_no, out_trade_no, total, total, "CNY", "wechat", PartnerKey, domain + "/WXPay/Refund", certpath,certpwd);
                         if (rev != null && (rev.Contains("<err_code_des><![CDATA[订单已全额退款]]></err_code_des>") ||
-                            rev.Contains("<err_code_des><![CDATA[累计退款金额大于支付金额]]></err_code_des>")))
+                            rev.Contains("<err_code_des><![CDATA[累计退款金额大于支付金额]]></err_code_des>")))//这单发起退款成功
                         {
-                            model.type = 0;
-                            BaseResponseModel mod = masB.UpdateX(model);
-                            json.Data = mod;
+                            wxM.Ing_Sta = 2;
+                            BaseResponseModel result=wxB.SaveOrUpdate(wxM);
+                            if (result.status == 0)
+                            {//更新成功
+                                isfund = false;
+                                LogHelper.LogInfo("微信支付订单号" + wxM.out_trade_no + "修改状态失败");
+                            }
+                        }else
+                        {
+                            isfund = false;
+                            LogHelper.LogInfo("微信支付订单号" + wxM.out_trade_no + "退款失败:" + rev);
                         }
                     }
                     catch (Exception ex)
                     {
+                        isfund = false;
                         Public.LogHelper.LogInfo("微信原路返回异常:" + ex.InnerException == null ? ex.Message : ex.InnerException.Message);
                     }
 
                 }
+
+            }
+            if (isfund)
+            {
+                BaseResponseModel mod = masB.UpdateX(model);
+                json.Data = mod;
+            }else
+            {
+                BaseResponseModel mod = new BaseResponseModel();
+                mod.message = "发起退款失败";
+                mod.data = false;
+                json.Data = mod;
             }
             return json;
         }

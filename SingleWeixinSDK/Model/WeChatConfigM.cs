@@ -169,6 +169,8 @@ namespace Model
         
         public string str_Modify { get; set; }
 
+
+
     }
     public class WeChatFileM
     {

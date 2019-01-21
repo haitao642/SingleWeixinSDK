@@ -67,7 +67,7 @@ namespace Model
         public decimal dec_fee {get;set;}
 
         ///<summary>
-        ///状态   0：未支付或者支付失败    1：支付成功  2:这笔支付撤销到储值余额里去了
+        ///状态   0：未支付或者支付失败    1：支付成功  2:发起退款中  3:退款成功
         /// </summary>
         public int Ing_Sta {get;set;}
 
