@@ -542,10 +542,17 @@ namespace WeChat.Controllers
             TokenHelper tokenHelper = new TokenHelper(6000, wechatconfig.str_AppID, wechatconfig.str_AppSecret, openJSSDK);
             model.token = tokenHelper.GetToken();
 
+            BaseResponseModel canCan = masB.CheckUpdateX(model);
+            if (!((bool)canCan.data))
+            {
+                json.Data = canCan;
+                return json;
+            }
+
             WxPayResultB wxB = new WxPayResultB();
             List<WxPayResultM> list = wxB.GetMoelBypid(model.id);
-            bool isfund = true;//是否发起退款成功
-            if (list != null || list.Count > 0)
+            bool isfund = false;//是否发起退款成功
+            if (list != null && list.Count > 0)
             {
                 foreach (var wxM in list)
                 {
@@ -591,6 +598,9 @@ namespace WeChat.Controllers
 
                 }
 
+            }else
+            {
+                isfund = true;
             }
             if (isfund)
             {

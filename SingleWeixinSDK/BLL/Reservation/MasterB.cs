@@ -71,6 +71,21 @@ namespace BLL
         }
 
         /// <summary>
+        /// 检查是否可以退款
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public BaseResponseModel CheckUpdateX(cancelOrderM model)
+        {
+            BaseResponseModel response = new BaseResponseModel();
+            bool rev = dal.CheckUpdateX(model);
+            response.data = rev;
+
+            ConvertResponseB.HandResponse(response, dal.LastError);
+            return response;
+        }
+
+        /// <summary>
         /// 得到默认房价码
         /// </summary>
         /// <param name="time"></param>

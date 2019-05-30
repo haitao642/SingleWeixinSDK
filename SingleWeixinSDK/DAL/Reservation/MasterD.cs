@@ -272,6 +272,7 @@ namespace DAL
 
             strSql = string.Format(strSql, model.id);
             bool rev = this.Sqlca.ExecuteNonQuery(strSql);
+            LogHelper.LogInfo("取消主单:" + model.id+",结果:"+rev);
             if (!rev)
             {
 
@@ -448,6 +449,51 @@ namespace DAL
             this.Sqlca.RollbackTransaction();
             this.Sqlca.Close();
             return false;
+        }
+
+        public bool CheckUpdateX(cancelOrderM model)
+        {
+            MasterD dal = new MasterD();
+            MasterM m = dal.GetM<MasterM>(model.id);
+            if (m == null)
+            {
+                this.LastError = "L请选择主单";
+                return false;
+            }
+
+            if (!m.str_Sta.ToUpper().Trim().Equals("R"))
+            {
+                this.LastError = string.Format("L状态为{0}不能取消", m.str_Sta);
+                return false;
+            }
+
+            ///没有来期
+            if (!m.dt_ArrDate.HasValue)
+            {
+                this.LastError = "L没有来期，不能取消";
+                return false;
+            }
+
+            string strdate = string.Format("{0} 18:00:00", m.dt_ArrDate.Value.ToString("yyyy-MM-dd"));
+
+            DateTime dtdate = DateTime.Now;
+            if (!DateTime.TryParse(strdate, out dtdate))
+            {
+                this.LastError = "L没有来期，不能取消";
+                return false;
+            }
+
+            ///超过来期日的18点，不能取消
+            if (DateTime.Now > dtdate)
+            {
+                return false;
+            }
+
+            if (!CheckUpdateX(model.id))
+            {
+                return false;
+            }
+            return true;
         }
 
 

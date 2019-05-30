@@ -32,6 +32,20 @@ namespace DAL.Wechat
             sql = string.Format(sql, storeid);
             return this.GetQueryM<Model.WeChatConfigM>(sql).FirstOrDefault();
         }
+
+
+        /// <summary>
+        /// 根据酒店ID,营业点类型获取营业点图片
+        /// </summary>
+        /// <param name="Ing_Fk_SPkID"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public List<WeChatFileM> getOutLetImgList(string Ing_Fk_SPkID,int type)
+        {
+            return new List<WeChatFileM>();//取得全部的model
+        }
+
+
         /// <summary>
         /// 根据酒店ID获取门店图片
         /// </summary>

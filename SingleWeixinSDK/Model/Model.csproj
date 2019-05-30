@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="AspNetPageM.cs" />
     <Compile Include="BaseResponseModel.cs" />
+    <Compile Include="ChuanJie\ChuanJieIndexModel.cs" />
     <Compile Include="Cust\CustM.cs" />
     <Compile Include="ErrorMsg\ErrorItem.cs" />
     <Compile Include="ErrorMsg\ErrorListModel.cs" />

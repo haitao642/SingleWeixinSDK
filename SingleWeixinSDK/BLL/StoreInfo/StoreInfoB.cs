@@ -86,5 +86,10 @@ namespace BLL
         {
             return dal.GetStoreOtaImg(Ing_StoreID);
         }
+        public List<StoreImgM> GetOutLetImg(int Ing_StoreID,int type)
+        {
+            return dal.GetOutLetImg(Ing_StoreID,type);
+        }
+
     }
 }
